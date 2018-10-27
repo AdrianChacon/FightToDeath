@@ -31,10 +31,10 @@ const enhancer = compose(
 	withStateHandlers({
 		username: '',
 		password: ''
-	},{
+	}, {
 		onChangeUsername: () => event => ({ username: event.target.value }),
 		onChangePassword: () => event => ({ password: event.target.value })
 	})
 )
-   
+
 export default enhancer(Login)

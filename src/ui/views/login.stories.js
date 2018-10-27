@@ -4,6 +4,6 @@ import { storiesOf } from '@storybook/react'
 import { withKnobs } from '@storybook/addon-knobs/react'
 import { Login } from './login'
 
-storiesOf('Views', module)
+storiesOf('Views/Login', module)
 	.addDecorator(withKnobs)
 	.add('Login', () => <Login/>)

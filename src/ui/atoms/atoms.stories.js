@@ -9,20 +9,27 @@ import { Input } from './input'
 import { VerticalLayout, HorizontalLayout } from './layouts'
 import { Title } from './title'
 
-storiesOf('Atoms', module)
-	.addDecorator(withKnobs)
-	.add('Button', () => <Button onClick={ action('clicked') }>soyunboton</Button>)
+storiesOf('Atoms/Forms', module)
 	.add('Input', () => <Input/>)
-	.add('Vertical layout', () => <VerticalLayout height={ text('Height', '25vh') }>
-		<div style={ { color: 'white', width: '35px', height: '35px', border: '3px solid white', margin: '3px' } }>a</div>
-		<div style={ { color: 'white', width: '35px', height: '35px', border: '3px solid white', margin: '3px' } }>b</div>
-		<div style={ { color: 'white', width: '35px', height: '35px', border: '3px solid white', margin: '3px' } }>c</div>
-		<div style={ { color: 'white', width: '35px', height: '35px', border: '3px solid white', margin: '3px' } }>d</div>
+
+storiesOf('Atoms/Labels', module)
+	.add('Title', () => <Title>Figth to death</Title>)
+
+storiesOf('Atoms/Buttons', module)
+	.addDecorator(withKnobs)
+	.add('Button', () => <Button onClick={ action('clicked') }>Iḿ a button</Button>)
+
+storiesOf('Atoms/Layout')
+	.addDecorator(withKnobs)
+	.add('Layout/Vertical layout', () => <VerticalLayout height={ text('Height', '25vh') }>
+		<div style={ { color: 'white', width: '35px', height: '35px', border: '3px solid white', margin: '3px', display: 'flex', justifyContent: 'center', alignItems: 'center' } }>a</div>
+		<div style={ { color: 'white', width: '35px', height: '35px', border: '3px solid white', margin: '3px', display: 'flex', justifyContent: 'center', alignItems: 'center' } }>b</div>
+		<div style={ { color: 'white', width: '35px', height: '35px', border: '3px solid white', margin: '3px', display: 'flex', justifyContent: 'center', alignItems: 'center' } }>c</div>
+		<div style={ { color: 'white', width: '35px', height: '35px', border: '3px solid white', margin: '3px', display: 'flex', justifyContent: 'center', alignItems: 'center' } }>d</div>
 	</VerticalLayout>)
-	.add('Horizontal layout', () => <HorizontalLayout>
-		<div style={ { color: 'white', width: '35px', height: '35px', border: '3px solid white', margin: '3px' } }>a</div>
-		<div style={ { color: 'white', width: '35px', height: '35px', border: '3px solid white', margin: '3px' } }>b</div>
-		<div style={ { color: 'white', width: '35px', height: '35px', border: '3px solid white', margin: '3px' } }>c</div>
-		<div style={ { color: 'white', width: '35px', height: '35px', border: '3px solid white', margin: '3px' } }>d</div>
+	.add('Layout/Horizontal layout', () => <HorizontalLayout>
+		<div style={ { color: 'white', width: '35px', height: '35px', border: '3px solid white', margin: '3px', display: 'flex', justifyContent: 'center', alignItems: 'center' } }>a</div>
+		<div style={ { color: 'white', width: '35px', height: '35px', border: '3px solid white', margin: '3px', display: 'flex', justifyContent: 'center', alignItems: 'center' } }>b</div>
+		<div style={ { color: 'white', width: '35px', height: '35px', border: '3px solid white', margin: '3px', display: 'flex', justifyContent: 'center', alignItems: 'center' } }>c</div>
+		<div style={ { color: 'white', width: '35px', height: '35px', border: '3px solid white', margin: '3px', display: 'flex', justifyContent: 'center', alignItems: 'center' } }>d</div>
 	</HorizontalLayout>)
-	.add('Default', () => <Title>Figth to death</Title>)

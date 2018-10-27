@@ -8,6 +8,14 @@
         "eslint:recommended",
         "plugin:react/recommended"
     ],
+    "settings": {
+        "react": {
+            "createClass": "createReactClass",
+            "pragma": "React", 
+            "version": "16.6"
+        },
+        "propWrapperFunctions": [ "forbidExtraProps" ]                         
+    },
     "parserOptions": {
         "ecmaVersion": 2018,
         "ecmaFeatures": {

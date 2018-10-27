@@ -5,6 +5,7 @@ width: 100%;
 display: flex;
 flex-direction: column;
 height: ${props => props.height}; 
+overflow: hidden;
 `
 
 VerticalLayout.defaultProps = { height: '10vh' }

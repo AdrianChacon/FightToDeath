@@ -1,5 +1,6 @@
 import React from 'react'
 import { Login } from '../ui/views/login'
+import { withStateHandlers, setDisplayName, compose } from 'recompose'
 
 class LoginEnhanced extends React.Component{
     constructor(props){
@@ -25,4 +26,15 @@ class LoginEnhanced extends React.Component{
     }
 }
 
-export default LoginEnhanced
+const enhancer = compose(
+    setDisplayName('LoginEnhanced'),
+    withStateHandlers({
+        username: '',
+        password: ''
+        },{
+        onChangeUsername: () => event => ({username: event.target.value}),
+        onChangePassword: () => event => ({password: event.target.value})
+    })
+   )
+   
+export default enhancer(Login)

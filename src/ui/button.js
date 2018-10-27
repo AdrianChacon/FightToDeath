@@ -4,4 +4,4 @@ const Button = styled.button`
 background: red;
 `
 
-export Button;
+export { Button }

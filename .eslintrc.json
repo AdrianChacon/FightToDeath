@@ -6,6 +6,7 @@
     },
     "extends": [
         "eslint:recommended",
+		"react-app",
         "plugin:react/recommended"
     ],
     "settings": {
@@ -31,8 +32,14 @@
         "linebreak-style": 0,
         "quotes": ["error","single"],
         "semi": ["error","never"],
+        "keyword-spacing": "warn",
+		"comma-spacing": "warn",
+		"comma-dangle": ["error", "never"],
         "object-curly-spacing": ["error", "always"],
         "array-bracket-spacing": ["error", "always"],
-        "react/jsx-curly-spacing": ["error", "always"]
+        "react/jsx-curly-spacing": ["error", "always"],
+        "react/jsx-uses-vars": 2,
+		"react/jsx-uses-react": 2,
+		"react/no-unused-prop-types":2
     }
 }

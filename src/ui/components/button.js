@@ -9,6 +9,7 @@ padding: 10px;
 font-size: 16px;
 font-family: 'VT323', monospace;
 min-width: 100px;
+cursor: pointer;
 `
 
 export { Button }

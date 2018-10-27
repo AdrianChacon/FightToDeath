@@ -1,5 +1,5 @@
 import React from 'react'
-import '../App.css'
+import '../../App.css'
 import { storiesOf } from '@storybook/react'
 import { withKnobs, text } from '@storybook/addon-knobs/react'
 import { VerticalLayout, HorizontalLayout } from './layouts'

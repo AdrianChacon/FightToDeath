@@ -2,4 +2,6 @@
 
 body {
   font-family: 'VT323', monospace;
+  background: black;
+  height: 100vh;
 }

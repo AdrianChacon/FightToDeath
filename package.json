@@ -9,6 +9,7 @@
     "react": "^16.6.0",
     "react-dom": "^16.6.0",
     "react-scripts": "2.0.5",
+    "recompose": "^0.30.0",
     "styled-components": "^4.0.2"
   },
   "scripts": {

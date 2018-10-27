@@ -1,9 +1,12 @@
 import React from 'react'
-import { Button } from '../components/button'
-import { Input } from '../components/input'
-import { Title } from '../components/title'
-import { Label } from '../components/label'
-import { VerticalLayout, HorizontalLayout } from '../components/layouts'
+import {
+	Button,
+	Input,
+	Title,
+	Label,
+	VerticalLayout,
+	HorizontalLayout
+} from '../atoms'
 
 const Login = ({ username, password, onChangeUsername, onChangePassword }) => {
 	return (

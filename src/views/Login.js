@@ -29,10 +29,10 @@ import { withStateHandlers, setDisplayName, compose } from 'recompose'
 const enhancer = compose(
 	setDisplayName('LoginEnhanced'),
 	withStateHandlers({
-		username: '',
+		email: '',
 		password: ''
 	}, {
-		onChangeUsername: () => event => ({ username: event.target.value }),
+		onChangeEmail: () => event => ({ email: event.target.value }),
 		onChangePassword: () => event => ({ password: event.target.value })
 	})
 )

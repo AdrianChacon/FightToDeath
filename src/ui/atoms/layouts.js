@@ -12,7 +12,7 @@ overflow: hidden;
 box-sizing: border-box;
 `
 
-VerticalLayout.defaultProps = { height: '10vh' }
+VerticalLayout.defaultProps = { height: 'auto' }
 
 const HorizontalLayout = styled.div`
 width: 100%;

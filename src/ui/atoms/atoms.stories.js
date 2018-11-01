@@ -17,7 +17,7 @@ storiesOf('Atoms/Labels', module)
 
 storiesOf('Atoms/Buttons', module)
 	.addDecorator(withKnobs)
-	.add('Button', () => <Button onClick={ action('clicked') }>Iḿ a button</Button>)
+	.add('Button', () => <Button onClick={ action('clicked') }>Im a button</Button>)
 
 storiesOf('Atoms/Layout')
 	.addDecorator(withKnobs)

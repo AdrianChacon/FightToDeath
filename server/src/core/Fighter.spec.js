@@ -109,5 +109,20 @@ describe('Fighter', () => {
 			expect(fighter.getDamage).not.toBe(undefined)
 			expect(fighter.getDamage()).toBeCloseTo(5, 2)
 		})
+
+		it('have resistances', () => {
+			expect(fighter.getResistances).not.toBe(undefined)
+			expect(fighter.getResistances()).toEqual({
+				blunt: 5,
+				pierce: 5,
+				cut: 5,
+				fire: 5,
+				poison: 5,
+				cold: 5,
+				electricity: 5,
+				confusion: 5,
+				paralisis: 5,
+			})
+		})
 	})
 })

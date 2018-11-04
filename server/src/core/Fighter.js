@@ -60,6 +60,21 @@ class Fighter {
 		const { str } = this.baseStats
 		return str
 	}
+
+	getResistances(){
+		const { res, con, spr, int} = this.baseStats
+		return {
+			blunt: res * 0.005 + con * 0.005,
+			pierce: res * 0.005 + con * 0.005,
+			cut: res * 0.005 + con * 0.005,
+			fire: res * 0.005 + con * 0.005,
+			poison: res * 0.005 + con * 0.005,
+			cold: res * 0.005 + con * 0.005,
+			electricity: res * 0.005 + con * 0.005,
+			confusion: spr * 0.005 + int * 0.005,
+			paralisis: spr * 0.005 + int * 0.005
+		}
+	}
 }
 
 module.exports = Fighter

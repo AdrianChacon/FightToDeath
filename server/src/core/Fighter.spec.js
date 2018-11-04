@@ -15,6 +15,8 @@ const baseConfig = {
 	}
 }
 
+const experienceToLevel5 = 460
+
 describe('Fighter', () => {
 	describe('basic functions', () => {
 		let fighter
@@ -24,7 +26,7 @@ describe('Fighter', () => {
 		})
 
 		it('exist', () => {
-			expect(Fighter).not.toEqual(undefined)
+			expect(Fighter).toBeDefined()
 		})
 
 		it('requires a config object', () => {
@@ -32,13 +34,13 @@ describe('Fighter', () => {
 		})
 
 		it('have an id', () => {
-			expect(fighter.id).not.toEqual(undefined)
+			expect(fighter.id).toBeDefined()
 			expect(() => new Fighter({})).toThrow()
 
 		})
 
 		it('have a name', () => {
-			expect(fighter.name).not.toEqual(undefined)
+			expect(fighter.name).toBeDefined()
 		})
 
 		it('have base stats', () => {
@@ -61,7 +63,7 @@ describe('Fighter', () => {
 
 		it('have experience points', () => {
 			expect(fighter.experience).toEqual(0)
-			expect(fighter.giveExperience).not.toEqual(undefined)
+			expect(fighter.giveExperience).toBeDefined()
 			fighter.giveExperience(100)
 			expect(fighter.experience).toEqual(100)
 		})
@@ -73,6 +75,26 @@ describe('Fighter', () => {
 			fighter = new Fighter({ ...baseConfig })
 			fighter.giveExperience(100)
 			expect(fighter.level).toEqual(2)
+		})
+
+		it('gets stat points when leveling up every 5 levels', () => {
+			expect(fighter.statPoints).toBe(0)
+			fighter.giveExperience(experienceToLevel5)
+			expect(fighter.level).toBe(5)
+			expect(fighter.statPoints).toBe(1)
+		})
+
+		it('can invest stat points to increase stats', () => {
+			expect(fighter.investStatPoint).toBeDefined()
+			fighter.giveExperience(experienceToLevel5)
+			expect(() => fighter.investStatPoint('kar')).toThrow()
+			fighter.investStatPoint('str')
+			expect(fighter.baseStats.str).toBe(6)
+		})
+
+		it('does nothing when invest stat points having 0 of them', () => {
+			fighter.investStatPoint('str')
+			expect(fighter.baseStats.str).toBe(5)
 		})
 
 		it('have life', () => {

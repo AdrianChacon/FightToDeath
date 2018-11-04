@@ -1,5 +1,7 @@
 const { scaleDown, reduceSum } = require('./vector.utils')
 
+const validStats = ['str', 'res', 'int', 'dex', 'spr', 'spd', 'con', 'lck']
+
 class Fighter {
 	constructor(config) {
 		if (!config) throw new Error('A config object is required')
@@ -15,8 +17,9 @@ class Fighter {
 		if (!config.baseStats.lck) throw new Error('Lck is required')
 		this.id = config.id
 		this.name = config.name
-		this.baseStats = config.baseStats
-		,
+		this.baseStats = { ...config.baseStats }
+		
+		this.statPoints = config.statPoints || 0
 		this.level = config.level || 1
 		this.experience = config.experience || 0
 
@@ -41,6 +44,15 @@ class Fighter {
 
 	_levelUp() {
 		this.level++
+		if(this.level % 5 === 0) this.statPoints ++
+	}
+
+	investStatPoint(stat){
+		if(!validStats.includes(stat)) throw new Error(`${stat} is not a valid stat`)
+		if(this.statPoints > 0) {
+			this.statPoints --
+			this.baseStats[stat] ++
+		}
 	}
 
 	applyDamage(damages){

@@ -1,3 +1,5 @@
+const { scaleDown, reduceSum } = require('./vector.utils')
+
 class Fighter {
 	constructor(config) {
 		if (!config) throw new Error('A config object is required')
@@ -14,7 +16,7 @@ class Fighter {
 		this.id = config.id
 		this.name = config.name
 		this.baseStats = config.baseStats
-
+		,
 		this.level = config.level || 1
 		this.experience = config.experience || 0
 
@@ -39,6 +41,14 @@ class Fighter {
 
 	_levelUp() {
 		this.level++
+	}
+
+	applyDamage(damages){
+		const resistances = this.getResistances()
+		const computedDamage = reduceSum(scaleDown(damages, resistances))
+		this.currentLife = this.currentLife > computedDamage ? 
+			this.currentLife - computedDamage :
+			0
 	}
 
 	getMaxLife() {

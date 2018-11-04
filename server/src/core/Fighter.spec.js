@@ -16,7 +16,7 @@ const baseConfig = {
 }
 
 describe('Fighter', () => {
-	describe('basic shape', () => {
+	describe('basic functions', () => {
 		let fighter
 
 		beforeEach(() => {
@@ -113,16 +113,34 @@ describe('Fighter', () => {
 		it('have resistances', () => {
 			expect(fighter.getResistances).not.toBe(undefined)
 			expect(fighter.getResistances()).toEqual({
-				blunt: 5,
-				pierce: 5,
-				cut: 5,
-				fire: 5,
-				poison: 5,
-				cold: 5,
-				electricity: 5,
-				confusion: 5,
-				paralisis: 5,
+				blunt: 0.05,
+				pierce: 0.05,
+				cut: 0.05,
+				fire: 0.05,
+				poison: 0.05,
+				cold: 0.05,
+				electricity: 0.05,
+				confusion: 0.05,
+				paralisis: 0.05,
 			})
+		})
+
+		it('gets single type damage', () => {
+			expect(fighter.applyDamage).not.toBe(undefined)
+			fighter.applyDamage({
+				blunt: 10
+			})
+			expect(fighter.currentLife).toBe(165.5)
+		})
+
+		it('gets multi type damage', () => {
+			expect(fighter.applyDamage).not.toBe(undefined)
+			fighter.applyDamage({
+				blunt: 10,
+				fire: 10,
+				poison: 10
+			})
+			expect(fighter.currentLife).toBe(146.5)
 		})
 	})
 })

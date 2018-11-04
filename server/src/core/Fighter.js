@@ -55,6 +55,11 @@ class Fighter {
 		const { dex, con, lck, spd } = this.baseStats
 		return (dex * 2.0 + con * 1.0 + lck * 1.5 + spd * 1.5) / 100
 	}
+
+	getDamage() {
+		const { str } = this.baseStats
+		return str
+	}
 }
 
 module.exports = Fighter

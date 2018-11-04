@@ -16,7 +16,7 @@ const baseConfig = {
 }
 
 describe('Fighter', () => {
-	describe('shape', () => {
+	describe('basic shape', () => {
 		let fighter
 
 		beforeEach(() => {
@@ -96,13 +96,18 @@ describe('Fighter', () => {
 		it('have a toDodge ratio', () => {
 			expect(fighter.getToDodgeRatio).not.toBe(undefined)
 			expect(fighter.getToDodgeRatio()).toBeCloseTo(0.30, 2)
-			let config = { ...baseConfig }
+			let config = { ...baseConfig, baseStats: { ...baseConfig.baseStats } }
 			config.baseStats.dex = 10
 			config.baseStats.lck = 10
 			config.baseStats.con = 10
 			config.baseStats.spd = 10
 			fighter = new Fighter(config)
 			expect(fighter.getToDodgeRatio()).toBeCloseTo(0.60, 2)
+		})
+
+		it('have damage', () => {
+			expect(fighter.getDamage).not.toBe(undefined)
+			expect(fighter.getDamage()).toBeCloseTo(5, 2)
 		})
 	})
 })

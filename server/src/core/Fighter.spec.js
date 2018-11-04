@@ -64,13 +64,45 @@ describe('Fighter', () => {
 			expect(fighter.giveExperience).not.toEqual(undefined)
 			fighter.giveExperience(100)
 			expect(fighter.experience).toEqual(100)
+		})
+
+		it('can level up', () => {
+			expect(fighter.getExperienceToNextLevel()).toEqual(100)
+			fighter = new Fighter({ ...baseConfig, level: 2 })
+			expect(fighter.getExperienceToNextLevel()).toEqual(220)
+			fighter = new Fighter({ ...baseConfig })
+			fighter.giveExperience(100)
 			expect(fighter.level).toEqual(2)
 		})
 
-		it('have max life', () => {
+		it('have life', () => {
+			expect(fighter.currentLife).toBe(175)
 			expect(fighter.maxLife).toBe(175)
+			fighter = new Fighter({ ...baseConfig, currentLife: 75 })
+			expect(fighter.currentLife).toBe(75)
 		})
 
+		it('have a toHit ratio', () => {
+			expect(fighter.getToHitRatio).not.toBe(undefined)
+			expect(fighter.getToHitRatio()).toBeCloseTo(0.45, 2)
+			let config = { ...baseConfig, baseStats: { ...baseConfig.baseStats } }
+			config.baseStats.dex = 10
+			config.baseStats.lck = 10
+			config.baseStats.int = 10
+			fighter = new Fighter(config)
+			expect(fighter.getToHitRatio()).toBeCloseTo(0.9, 2)
+		})
 
+		it('have a toDodge ratio', () => {
+			expect(fighter.getToDodgeRatio).not.toBe(undefined)
+			expect(fighter.getToDodgeRatio()).toBeCloseTo(0.30, 2)
+			let config = { ...baseConfig }
+			config.baseStats.dex = 10
+			config.baseStats.lck = 10
+			config.baseStats.con = 10
+			config.baseStats.spd = 10
+			fighter = new Fighter(config)
+			expect(fighter.getToDodgeRatio()).toBeCloseTo(0.60, 2)
+		})
 	})
 })

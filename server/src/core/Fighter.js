@@ -1,6 +1,7 @@
 const { scaleDown, reduceSum } = require('./vector.utils')
 
 const validStats = ['str', 'res', 'int', 'dex', 'spr', 'spd', 'con', 'lck']
+const validEquipmentSpots = ['head','shoulder','gloves','legs','foot','ringLeft1','ringLeft2','ringLeft3','ringRight1','ringRight2','ringRight3','amulet','leftHand','rightHand']
 
 class Fighter {
 	constructor(config) {
@@ -18,6 +19,22 @@ class Fighter {
 		this.id = config.id
 		this.name = config.name
 		this.baseStats = { ...config.baseStats }
+		this.equipment = {
+			head: null,
+			shoulder: null,
+			gloves: null,
+			legs: null,
+			foot: null,
+			ringLeft1: null,
+			ringLeft2: null,
+			ringLeft3: null,
+			ringRight1: null,
+			ringRight2: null,
+			ringRight3: null,
+			amulet: null,
+			leftHand: null,
+			rightHand: null
+		}
 		
 		this.statPoints = config.statPoints || 0
 		this.level = config.level || 1
@@ -97,6 +114,41 @@ class Fighter {
 			electricity: res * 0.005 + con * 0.005,
 			confusion: spr * 0.005 + int * 0.005,
 			paralisis: spr * 0.005 + int * 0.005
+		}
+	}
+
+	equip(item, slot){
+		if(item.require){
+			for(const i in item.require){
+				const { type, target, ammount } = item.require[i]
+				switch(type){
+					case 'stat':
+						const stats = this.baseStats
+						const targetAmmount = stats[target]
+						if(targetAmmount < ammount) return
+						break
+					case 'level':
+						if(this.level < ammount) return
+				}
+			}
+		}
+
+		if(item.twoHanded){
+			this.equipment.rightHand = undefined
+			this.equipment.leftHand = undefined
+		}
+
+		if(!slot){
+			if(['weapon', 'shield'].includes(item.type)){
+				if(!this.equipment.rightHand)	{
+					this.equipment.rightHand = item
+				}else{
+					this.equipment.leftHand = item
+				}
+			}
+		}else{
+			if(!validEquipmentSpots.includes(slot)) throw new Error(`${stat} is not a valid equipment spot`)
+			this.equipment[slot] = item
 		}
 	}
 }

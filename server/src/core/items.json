@@ -1,0 +1,51 @@
+[
+  {
+    "id": 1,
+    "name": "Rusted Sword",
+    "type": "weapon",
+    "family": "sword",
+    "damage": [
+      { "type": "cut", "scalar": "str", "ammount": 1.5}
+    ]
+  },{
+    "id": 100,
+    "name": "Wooden Buckler",
+    "type": "shield",
+    "effect": [
+      { "type": "resistance", "ammount": { "blunt": 0.05, "pierce": 0.05, "cut": 0.05 } }
+    ]
+  },{
+    "id": 2,
+    "name": "Heavy Axe",
+    "type": "weapon",
+    "family": "axe", 
+    "twoHanded": true,
+    "damage": [
+      { "type": "cut", "scalar": "str", "ammount": 4}
+    ],
+    "require": [
+      { "type": "stat", "target": "str", "ammount": 6}
+    ]
+  },{
+    "id": 3,
+    "name": "Poison Dagger",
+    "type": "weapon",
+    "family": "dagger",
+    "damage": [
+      { "type": "pierce", "scalar": "str", "ammount": 1.2}
+    ],
+    "require": [
+      { "type": "level", "ammount": 2}
+    ]
+  },{
+    "id": 4,
+    "name": "Long Spear",
+    "type": "weapon",
+    "family": "spear",
+    "twoHanded": true,
+    "damage": [
+      { "type": "pierce", "scalar": "str", "ammount": 1.2}
+    ]
+  }
+
+]

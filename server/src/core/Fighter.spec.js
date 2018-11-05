@@ -1,4 +1,6 @@
 const Fighter = require('./Fighter')
+const items = require('./items.json')
+const getItem = name => items.find(item => item.name === name)
 
 const baseConfig = {
 	id: '99999',
@@ -16,6 +18,11 @@ const baseConfig = {
 }
 
 const experienceToLevel5 = 460
+const rustedSword = getItem('Rusted Sword')
+const woodenBuckler = getItem('Wooden Buckler')
+const heavyAxe = getItem('Heavy Axe')
+const poisonDagger = getItem('Poison Dagger')
+const longSpear = getItem('Long Spear')
 
 describe('Fighter', () => {
 	let fighter
@@ -24,7 +31,7 @@ describe('Fighter', () => {
 		fighter = new Fighter(baseConfig)
 	})
 	
-	describe('basic shape', () => {
+	describe('shape', () => {
 		it('exist', () => {
 			expect(Fighter).toBeDefined()
 		})
@@ -111,6 +118,82 @@ describe('Fighter', () => {
 				confusion: 0.05,
 				paralisis: 0.05,
 			})
+		})
+
+		it('have equipment slots', () => {
+			expect(fighter.equipment).toBeDefined()
+			expect(fighter.equipment).toEqual({
+				head: null,
+				shoulder: null,
+				gloves: null,
+				legs: null,
+				foot: null,
+				ringLeft1: null,
+				ringLeft2: null,
+				ringLeft3: null,
+				ringRight1: null,
+				ringRight2: null,
+				ringRight3: null,
+				amulet: null,
+				leftHand: null,
+				rightHand: null
+			})
+		})
+	})
+
+	describe('equipment', () => {
+		it('can equip a weapon', () => {
+			expect(fighter.equip).toBeDefined()
+			fighter.equip(rustedSword)
+			expect(fighter.equipment.rightHand).toBe(rustedSword)
+		})
+
+		it('can equip two weapons/shields', () => {
+			fighter.equip(rustedSword)
+			fighter.equip(woodenBuckler)
+			expect(fighter.equipment.rightHand).toBe(rustedSword)
+			expect(fighter.equipment.leftHand).toBe(woodenBuckler)
+		})
+
+		it('can equip to specific slot', () => {
+			fighter.equip(rustedSword, 'leftHand')
+			expect(fighter.equipment.leftHand).toBe(rustedSword)
+		})
+
+		it('cant equip to unexistent spot', () => {
+			expect(() => fighter.equip(rustedSword, 'leftToe')).toThrow()
+		})
+
+		it('cant equip an item if it doesnt meet the stat requirements', () => {
+			fighter.equip(heavyAxe)
+			expect(fighter.equipment.rightHand).not.toBe(heavyAxe)
+		})
+
+		it('can equip the same item if he meet the requirements', () => {
+			fighter.giveExperience(experienceToLevel5)
+			fighter.investStatPoint('str')
+			fighter.equip(heavyAxe)
+			expect(fighter.equipment.rightHand).toBe(heavyAxe)
+		})
+
+		it('cant equip an item if it doesnt meet the level requirements', () => {
+			fighter.equip(poisonDagger)
+			expect(fighter.equipment.rightHand).not.toBe(poisonDagger)
+		})
+
+		it('can equip the same item if he meet the requirements', () => {
+			fighter.giveExperience(100)
+			fighter.equip(poisonDagger)
+			expect(fighter.equipment.rightHand).toBe(poisonDagger)
+		})
+
+		it('removes any other weapon if equips a two handed weapon', () => {
+			fighter.equip(rustedSword, 'leftHand')
+			expect(fighter.equipment.leftHand).toBe(rustedSword)
+			fighter.equip(longSpear)
+			expect(fighter.equipment.rightHand).toBe(longSpear)
+			expect(fighter.equipment.leftHand).not.toBeDefined()
+				
 		})
 	})
 

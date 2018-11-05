@@ -80,7 +80,9 @@ class Fighter {
 
 	getDamage() {
 		const { str } = this.baseStats
-		return str
+		return {
+			blunt: str
+		}
 	}
 
 	getResistances(){

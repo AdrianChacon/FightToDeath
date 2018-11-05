@@ -18,13 +18,13 @@ const baseConfig = {
 const experienceToLevel5 = 460
 
 describe('Fighter', () => {
-	describe('basic functions', () => {
-		let fighter
+	let fighter
 
-		beforeEach(() => {
-			fighter = new Fighter(baseConfig)
-		})
-
+	beforeEach(() => {
+		fighter = new Fighter(baseConfig)
+	})
+	
+	describe('basic shape', () => {
 		it('exist', () => {
 			expect(Fighter).toBeDefined()
 		})
@@ -36,7 +36,6 @@ describe('Fighter', () => {
 		it('have an id', () => {
 			expect(fighter.id).toBeDefined()
 			expect(() => new Fighter({})).toThrow()
-
 		})
 
 		it('have a name', () => {
@@ -66,35 +65,6 @@ describe('Fighter', () => {
 			expect(fighter.giveExperience).toBeDefined()
 			fighter.giveExperience(100)
 			expect(fighter.experience).toEqual(100)
-		})
-
-		it('can level up', () => {
-			expect(fighter.getExperienceToNextLevel()).toEqual(100)
-			fighter = new Fighter({ ...baseConfig, level: 2 })
-			expect(fighter.getExperienceToNextLevel()).toEqual(220)
-			fighter = new Fighter({ ...baseConfig })
-			fighter.giveExperience(100)
-			expect(fighter.level).toEqual(2)
-		})
-
-		it('gets stat points when leveling up every 5 levels', () => {
-			expect(fighter.statPoints).toBe(0)
-			fighter.giveExperience(experienceToLevel5)
-			expect(fighter.level).toBe(5)
-			expect(fighter.statPoints).toBe(1)
-		})
-
-		it('can invest stat points to increase stats', () => {
-			expect(fighter.investStatPoint).toBeDefined()
-			fighter.giveExperience(experienceToLevel5)
-			expect(() => fighter.investStatPoint('kar')).toThrow()
-			fighter.investStatPoint('str')
-			expect(fighter.baseStats.str).toBe(6)
-		})
-
-		it('does nothing when invest stat points having 0 of them', () => {
-			fighter.investStatPoint('str')
-			expect(fighter.baseStats.str).toBe(5)
 		})
 
 		it('have life', () => {
@@ -127,10 +97,6 @@ describe('Fighter', () => {
 			expect(fighter.getToDodgeRatio()).toBeCloseTo(0.60, 2)
 		})
 
-		it('have damage', () => {
-			expect(fighter.getDamage).not.toBe(undefined)
-			expect(fighter.getDamage()).toBeCloseTo(5, 2)
-		})
 
 		it('have resistances', () => {
 			expect(fighter.getResistances).not.toBe(undefined)
@@ -146,7 +112,49 @@ describe('Fighter', () => {
 				paralisis: 0.05,
 			})
 		})
+	})
 
+	describe('level up and get stats', () => {
+		it('can level up', () => {
+			expect(fighter.getExperienceToNextLevel()).toEqual(100)
+			fighter = new Fighter({ ...baseConfig, level: 2 })
+			expect(fighter.getExperienceToNextLevel()).toEqual(220)
+			fighter = new Fighter({ ...baseConfig })
+			fighter.giveExperience(100)
+			expect(fighter.level).toEqual(2)
+		})
+
+		it('gets stat points when leveling up every 5 levels', () => {
+			expect(fighter.statPoints).toBe(0)
+			fighter.giveExperience(experienceToLevel5)
+			expect(fighter.level).toBe(5)
+			expect(fighter.statPoints).toBe(1)
+		})
+
+		it('can invest stat points to increase stats', () => {
+			expect(fighter.investStatPoint).toBeDefined()
+			fighter.giveExperience(experienceToLevel5)
+			expect(() => fighter.investStatPoint('kar')).toThrow()
+			fighter.investStatPoint('str')
+			expect(fighter.baseStats.str).toBe(6)
+		})
+
+		it('does nothing when invest stat points having 0 of them', () => {
+			fighter.investStatPoint('str')
+			expect(fighter.baseStats.str).toBe(5)
+		})
+	})
+
+	describe('deal damage', () => {
+		it('have barehand damage', () => {
+			expect(fighter.getDamage).not.toBe(undefined)
+			expect(fighter.getDamage()).toEqual({
+				blunt: 5
+			})
+		})
+	})
+
+	describe('get damage', () => {
 		it('gets single type damage', () => {
 			expect(fighter.applyDamage).not.toBe(undefined)
 			fighter.applyDamage({

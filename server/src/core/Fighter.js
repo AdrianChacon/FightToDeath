@@ -97,6 +97,20 @@ class Fighter {
 
 	getDamage() {
 		const { str } = this.baseStats
+		const { rightHand, leftHand } = this.equipment
+		if(rightHand || leftHand){			
+			const damages = [
+				...rightHand ? rightHand.damage : [],
+				...leftHand ? leftHand.damage : []
+			]
+			
+			return damages.reduce((acc, {type, scalar, ammount, base}) => {
+				if(!acc[type]) acc[type] = 0
+				if(scalar) acc[type] += this.baseStats[scalar] * ammount
+				if(base) acc[type] += base
+				return acc
+			},{})
+		}
 		return {
 			blunt: str
 		}
@@ -125,10 +139,10 @@ class Fighter {
 					case 'stat':
 						const stats = this.baseStats
 						const targetAmmount = stats[target]
-						if(targetAmmount < ammount) return
+						if(targetAmmount < ammount) throw new Error('Fighter did not meet the stat requirement')
 						break
 					case 'level':
-						if(this.level < ammount) return
+						if(this.level < ammount) throw new Error('Fighter did not meet the level requirement')
 				}
 			}
 		}

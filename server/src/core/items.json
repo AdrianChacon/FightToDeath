@@ -32,7 +32,8 @@
     "type": "weapon",
     "family": "dagger",
     "damage": [
-      { "type": "pierce", "scalar": "str", "ammount": 1.2}
+      { "type": "pierce", "scalar": "str", "ammount": 1.2},
+      { "type": "poison", "base": 2}
     ],
     "require": [
       { "type": "level", "ammount": 2}

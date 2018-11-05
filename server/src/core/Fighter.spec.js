@@ -148,11 +148,19 @@ describe('Fighter', () => {
 			expect(fighter.equipment.rightHand).toBe(rustedSword)
 		})
 
-		it('can equip two weapons/shields', () => {
+		it('can equip weapons and shields', () => {
 			fighter.equip(rustedSword)
 			fighter.equip(woodenBuckler)
 			expect(fighter.equipment.rightHand).toBe(rustedSword)
 			expect(fighter.equipment.leftHand).toBe(woodenBuckler)
+		})
+
+		it('can equip two weapons', () => {
+			fighter.equip(rustedSword)
+			fighter.giveExperience(100)
+			fighter.equip(poisonDagger)
+			expect(fighter.equipment.rightHand).toBe(rustedSword)
+			expect(fighter.equipment.leftHand).toBe(poisonDagger)
 		})
 
 		it('can equip to specific slot', () => {
@@ -165,8 +173,7 @@ describe('Fighter', () => {
 		})
 
 		it('cant equip an item if it doesnt meet the stat requirements', () => {
-			fighter.equip(heavyAxe)
-			expect(fighter.equipment.rightHand).not.toBe(heavyAxe)
+			expect(() => fighter.equip(heavyAxe)).toThrow()
 		})
 
 		it('can equip the same item if he meet the requirements', () => {
@@ -177,8 +184,7 @@ describe('Fighter', () => {
 		})
 
 		it('cant equip an item if it doesnt meet the level requirements', () => {
-			fighter.equip(poisonDagger)
-			expect(fighter.equipment.rightHand).not.toBe(poisonDagger)
+			expect(() => fighter.equip(poisonDagger)).toThrow()
 		})
 
 		it('can equip the same item if he meet the requirements', () => {
@@ -233,6 +239,32 @@ describe('Fighter', () => {
 			expect(fighter.getDamage).not.toBe(undefined)
 			expect(fighter.getDamage()).toEqual({
 				blunt: 5
+			})
+		})
+
+		it('have a weapon damage', () => {
+			fighter.equip(rustedSword)
+			expect(fighter.getDamage()).toEqual({
+				cut: 7.5
+			})
+		})
+
+		it('have a dual weapon damage', () => {
+			fighter.equip(rustedSword)
+			fighter.equip(rustedSword)
+			expect(fighter.getDamage()).toEqual({
+				cut: 15
+			})
+		})
+
+		it('have multi weapon damage', () => {
+			fighter.equip(rustedSword)
+			fighter.giveExperience(100)
+			fighter.equip(poisonDagger)
+			expect(fighter.getDamage()).toEqual({
+				cut: 7.5,
+				pierce: 6,
+				poison: 2
 			})
 		})
 	})

@@ -7,7 +7,7 @@ import {
 } from '../atoms'
 import { InputGroup } from '../molecules/InputGroup'
 
-const Login = ({ email, password, onChangeEmail, onChangePassword, emailError, passwordError }) => {
+const Login = ({ email, password, onChangeEmail, onChangePassword, emailError, passwordError, submitLogin }) => {
 	return (
 	<>
 		<VerticalLayout height='20vh'>
@@ -32,7 +32,7 @@ const Login = ({ email, password, onChangeEmail, onChangePassword, emailError, p
 		</VerticalLayout>
 		<VerticalLayout height='20vh'>
 			<HorizontalLayout justify='space-around'>
-				<Button>Login</Button>
+				<Button onClick={ submitLogin }>Login</Button>
 				<Button>Sign Up</Button>
 			</HorizontalLayout>
 		</VerticalLayout>

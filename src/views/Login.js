@@ -1,40 +1,36 @@
 import { Login } from '../ui/views/login'
-import { withStateHandlers, setDisplayName, compose } from 'recompose'
-
-// TODO: Remove legacy code, kept it just to compare with hocs
-// class LoginEnhanced extends React.Component{
-// 	constructor(props){
-// 		super(props)
-// 		this.state = {
-// 			username: '',
-// 			password: ''
-// 		}
-// 		this.onChangeUsername = event => this.setState({ username: event.target.value })
-// 		this.onChangePassword = event => this.setState({ password: event.target.value })
-
-// 	}
-
-// 	render() {
-// 		return (
-// 			<Login
-// 				username={ this.state.username }
-// 				password={ this.state.password }
-// 				onChangeUsername={ this.onChangeUsername }
-// 				onChangePassword={ this.onChangePassword }
-// 			/>
-// 		)
-// 	}
-// }
+import { withStateHandlers, setDisplayName, compose, withHandlers } from 'recompose'
+import axios from 'axios'
 
 const enhancer = compose(
 	setDisplayName('LoginEnhanced'),
 	withStateHandlers({
 		email: '',
-		password: ''
+		password: '',
+		emailError: null,
+		passwordError: null
 	}, {
-		onChangeEmail: () => event => ({ email: event.target.value }),
-		onChangePassword: () => event => ({ password: event.target.value })
-	})
+		onChangeEmail: () => event => ({ email: event.target.value, emailError: null }),
+		onChangePassword: () => event => ({ password: event.target.value, passwordError: null }),
+		setEmailError: () => error => ({ emailError: error }),
+		setPasswordError: () => error => ({ passwordError: error })
+	}),
+	withHandlers({
+		submitLogin: ({ email, password, setEmailError, setPasswordError }) => () => {
+			if (!email)	setEmailError('Required') 
+			if (!password) setPasswordError('Required')
+			if (!email || !password) return
+			axios.post('http://localhost:4000/api/login', {
+				code: btoa(email + ':' + password)
+			}).then(console.log)
+				.catch(({ response }) => {
+					const { data } = response
+					const { errors } = data
+
+					if (errors.includes('email')) setEmailError('Wrong')
+					if (errors.includes('password')) setPasswordError('Wrong')
+				})
+		} })
 )
 
 export default enhancer(Login)

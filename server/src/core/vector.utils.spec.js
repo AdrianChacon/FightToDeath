@@ -1,4 +1,4 @@
-const { scaleUp, scaleDown, factor, inverse, reduceSum } = require('./vector.utils')
+const { scaleUp, scaleDown, factor, inverse, reduceSum, add } = require('./vector.utils')
 
 
 describe('vector utils', () => {
@@ -30,9 +30,18 @@ describe('vector utils', () => {
     it('decreases various values', () => {
       let vec1 = { a: 3, b: 10   }
       let vec2 = { a: 0.05, b: 1 }
-      let result = { a: 2.85, b: 0}
+      let result = { a: 2.85, b: 0 }
       expect(scaleDown(vec1, vec2).a).toBeCloseTo(result.a, 2)
       expect(scaleDown(vec1, vec2).b).toBeCloseTo(result.b, 2)
+    })
+  })
+
+  describe('sum', () => {
+    it('return a vector sum of two others', () => {
+      let vec1 = { a: 3, b: 10, d: 4}
+      let vec2 = { a: 5, b: 1, c: 2}
+      let result = { a: 8, b: 11, c: 2, d: 4}
+      expect(add(vec1, vec2)).toEqual(result)
     })
   })
 

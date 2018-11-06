@@ -16,6 +16,14 @@ const factor = (vec, scalar) => Object
 
 const inverse = vec => factor(vec, -1)
 
+const add = (vec1, vec2) => {
+  const keys = Array.from(new Set([...Object.keys(vec1), ...Object.keys(vec2)]))
+  return keys.reduce((acc, key) => {
+    acc[key] = (vec1[key] || 0) + (vec2[key] || 0)
+    return acc
+  },{})
+}
+
 const reduceSum = vec => Object
 .keys(vec)
 .reduce((sum, key) => sum + vec[key], 0)
@@ -25,5 +33,6 @@ module.exports = {
   scaleDown,
   factor,
   inverse,
+  add,
   reduceSum
 }

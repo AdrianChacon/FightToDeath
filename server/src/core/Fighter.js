@@ -1,7 +1,8 @@
-const { scaleDown, reduceSum } = require('./vector.utils')
+const { scaleDown, reduceSum, add } = require('./vector.utils')
 
 const validStats = ['str', 'res', 'int', 'dex', 'spr', 'spd', 'con', 'lck']
-const validEquipmentSpots = ['head','shoulder','gloves','legs','foot','ringLeft1','ringLeft2','ringLeft3','ringRight1','ringRight2','ringRight3','amulet','leftHand','rightHand']
+const validEquipmentSpots = ['head','shoulder','gloves','legs','foot','ringLeft1','ringLeft2','ringLeft3','ringRight1','ringRight2','ringRight3','amulet','leftHand','rightHand','cloak']
+const validEffectTypes = ['resistance']
 
 class Fighter {
 	constructor(config) {
@@ -21,7 +22,7 @@ class Fighter {
 		this.baseStats = { ...config.baseStats }
 		this.equipment = {
 			head: null,
-			shoulder: null,
+			chest: null,
 			gloves: null,
 			legs: null,
 			foot: null,
@@ -33,7 +34,8 @@ class Fighter {
 			ringRight3: null,
 			amulet: null,
 			leftHand: null,
-			rightHand: null
+			rightHand: null,
+			cloak: null
 		}
 		
 		this.statPoints = config.statPoints || 0
@@ -116,9 +118,24 @@ class Fighter {
 		}
 	}
 
+	getAllEffects(){
+		return Object.values(this.equipment)
+			.reduce((acc, item) => (item && item.effect) ? [...acc, ...item.effect] : acc ,[])
+	}
+
+	getEffects(type){
+		const allEffects = this.getAllEffects()
+		if(!type) return allEffects
+		if(!validEffectTypes.includes(type)) throw new Error(`${stat} is not a valid effect type`)
+		return allEffects.filter(effect => effect.type === type)
+	}
+
 	getResistances(){
 		const { res, con, spr, int} = this.baseStats
-		return {
+
+		const resistanceEffects = this.getEffects('resistance').map(effect => effect.ammount)
+
+		const baseResistances = {
 			blunt: res * 0.005 + con * 0.005,
 			pierce: res * 0.005 + con * 0.005,
 			cut: res * 0.005 + con * 0.005,
@@ -129,6 +146,7 @@ class Fighter {
 			confusion: spr * 0.005 + int * 0.005,
 			paralisis: spr * 0.005 + int * 0.005
 		}
+		return resistanceEffects.reduce(add, baseResistances)
 	}
 
 	equip(item, slot){
@@ -147,24 +165,43 @@ class Fighter {
 			}
 		}
 
-		if(item.twoHanded){
-			this.equipment.rightHand = undefined
-			this.equipment.leftHand = undefined
-		}
 
 		if(!slot){
 			if(['weapon', 'shield'].includes(item.type)){
+				if(item.twoHanded){
+					this.equipment.rightHand = undefined
+					this.equipment.leftHand = undefined
+				}
+
 				if(!this.equipment.rightHand)	{
 					this.equipment.rightHand = item
 				}else{
 					this.equipment.leftHand = item
 				}
+				return
 			}
+			if(item.type === 'ring'){
+				const ringSlots = Object.keys(this.equipment).filter(key => /ring/.test(key))
+
+				for(let idx in ringSlots){
+					const name = ringSlots[idx]
+					if(!this.equipment[name]) {
+						this.equipment[name] = item
+						return
+					}
+				}
+				throw new Error(`No empty ring spot`)
+			}
+			this.equipment[item.type] = item
 		}else{
 			if(!validEquipmentSpots.includes(slot)) throw new Error(`${stat} is not a valid equipment spot`)
+			if(['weapon', 'shield'].includes(item.type) && !/Hand/.test(slot)) throw new Error(`Cant equip ${item.type} in ${slot}`)
+			if(/ring/.test(item.type) && !/ring/.test(slot)) throw new Error(`Cant equip rings in ${slot}`)
+			if(['head','chest','gloves','legs','foot','amulet','cloak'].includes(item.type) && item.type !== slot) throw new Error(`Cant equip ${item.type} item in ${slot} slot`)
 			this.equipment[slot] = item
 		}
 	}
 }
 
 module.exports = Fighter
+

@@ -47,6 +47,86 @@
     "damage": [
       { "type": "pierce", "scalar": "str", "ammount": 1.2}
     ]
+  },{
+    "id": 201,
+    "name": "Sackcloth Tunic",
+    "type": "chest",
+    "family": "tunic",
+    "effect": [
+      { "type": "resistance", "ammount": { "blunt": 0.01, "pierce": 0.01, "cut": 0.01, "cold": 0.02 } }
+    ]
+  },{
+    "id": 301,
+    "name": "Ringmail Gloves",
+    "type": "gloves",
+    "family": "ringmail",
+    "effect": [
+      { "type": "resistance", "ammount": { "pierce": 0.10, "cut": 0.10 } }
+    ]
+  },{
+    "id": 401,
+    "name": "Leather Cap",
+    "type": "head",
+    "family": "leather",
+    "effect": [
+      { "type": "resistance", "ammount": { "blunt": 0.03, "pierce": 0.03, "cut": 0.03 } }
+    ]
+  },{
+    "id": 501,
+    "name": "Leather Pants",
+    "type": "head",
+    "family": "leather",
+    "effect": [
+      { "type": "resistance", "ammount": { "blunt": 0.05, "pierce": 0.05, "cut": 0.05 } }
+    ]
+  },{
+    "id": 601,
+    "name": "Iron Boots",
+    "type": "foot",
+    "family": "iron",
+    "effect": [
+      { "type": "resistance", "ammount": { "blunt": 0.05, "pierce": 0.05, "cut": 0.15 } }
+    ]
+  },{
+    "id": 701,
+    "name": "Fire Shrine Ring",
+    "type": "ring",
+    "effect": [
+      { "type": "resistance", "ammount": { "fire": 0.15 } }
+    ]
+  },{
+    "id": 702,
+    "name": "Life Ring",
+    "type": "ring",
+    "effect": [
+    ]
+  },{
+    "id": 703,
+    "name": "Iron Ring",
+    "type": "ring"
+  },{
+    "id": 704,
+    "name": "Fashion Ring",
+    "type": "ring"
+  },{
+    "id": 705,
+    "name": "Cool Ring",
+    "type": "ring"
+  },{
+    "id": 706,
+    "name": "Fancy Ring",
+    "type": "ring"
+  },{
+    "id": 707,
+    "name": "Hunter Ring",
+    "type": "ring"
+  },{
+    "id": 801,
+    "name": "Wolf Amulet",
+    "type": "amulet"
+  },{
+    "id": 901,
+    "name": "Snow Cloak",
+    "type": "cloak"
   }
-
 ]

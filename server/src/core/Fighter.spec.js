@@ -2,6 +2,13 @@ const Fighter = require('./Fighter')
 const items = require('./items.json')
 const getItem = name => items.find(item => item.name === name)
 
+const itemBag = items.reduce((bag, item) => {
+	let name = item.name.replace(/ /g, '')
+	name = name.slice(0,1).toLowerCase() + name.slice(1)
+	bag[name] = item
+	return bag
+},{})
+
 const baseConfig = {
 	id: '99999',
 	name: 'Fran',
@@ -18,11 +25,27 @@ const baseConfig = {
 }
 
 const experienceToLevel5 = 460
-const rustedSword = getItem('Rusted Sword')
-const woodenBuckler = getItem('Wooden Buckler')
-const heavyAxe = getItem('Heavy Axe')
-const poisonDagger = getItem('Poison Dagger')
-const longSpear = getItem('Long Spear')
+const { 
+	rustedSword, 
+	woodenBuckler, 
+	heavyAxe, 
+	poisonDagger, 
+	longSpear, 
+	sackclothTunic, 
+	ringmailGloves, 
+	leatherCap, 
+	leatherPants, 
+	ironBoots, 
+	fireShrineRing,
+	lifeRing,
+	ironRing,
+	fashionRing,
+	coolRing,
+	fancyRing,
+	hunterRing,
+	wolfAmulet,
+	snowCloak
+} = itemBag
 
 describe('Fighter', () => {
 	let fighter
@@ -104,7 +127,6 @@ describe('Fighter', () => {
 			expect(fighter.getToDodgeRatio()).toBeCloseTo(0.60, 2)
 		})
 
-
 		it('have resistances', () => {
 			expect(fighter.getResistances).not.toBe(undefined)
 			expect(fighter.getResistances()).toEqual({
@@ -124,7 +146,7 @@ describe('Fighter', () => {
 			expect(fighter.equipment).toBeDefined()
 			expect(fighter.equipment).toEqual({
 				head: null,
-				shoulder: null,
+				chest: null,
 				gloves: null,
 				legs: null,
 				foot: null,
@@ -136,70 +158,160 @@ describe('Fighter', () => {
 				ringRight3: null,
 				amulet: null,
 				leftHand: null,
-				rightHand: null
+				rightHand: null,
+				cloak: null
 			})
 		})
 	})
 
 	describe('equipment', () => {
-		it('can equip a weapon', () => {
-			expect(fighter.equip).toBeDefined()
-			fighter.equip(rustedSword)
-			expect(fighter.equipment.rightHand).toBe(rustedSword)
+		describe('weapons', () => {
+			it('can equip a weapon', () => {
+				expect(fighter.equip).toBeDefined()
+				fighter.equip(rustedSword)
+				expect(fighter.equipment.rightHand).toBe(rustedSword)
+			})
+
+			it('can equip weapons and shields', () => {
+				fighter.equip(rustedSword)
+				fighter.equip(woodenBuckler)
+				expect(fighter.equipment.rightHand).toBe(rustedSword)
+				expect(fighter.equipment.leftHand).toBe(woodenBuckler)
+			})
+
+			it('can equip two weapons', () => {
+				fighter.equip(rustedSword)
+				fighter.giveExperience(100)
+				fighter.equip(poisonDagger)
+				expect(fighter.equipment.rightHand).toBe(rustedSword)
+				expect(fighter.equipment.leftHand).toBe(poisonDagger)
+			})
+
+			it('can equip to specific slot', () => {
+				fighter.equip(rustedSword, 'leftHand')
+				expect(fighter.equipment.leftHand).toBe(rustedSword)
+			})
+
+			it('cant equip to unexistent spot', () => {
+				expect(() => fighter.equip(rustedSword, 'leftToe')).toThrow()
+			})
+
+			it('cant equip an item if it doesnt meet the stat requirements', () => {
+				expect(() => fighter.equip(heavyAxe)).toThrow()
+			})
+
+			it('can equip the same item if he meet the requirements', () => {
+				fighter.giveExperience(experienceToLevel5)
+				fighter.investStatPoint('str')
+				fighter.equip(heavyAxe)
+				expect(fighter.equipment.rightHand).toBe(heavyAxe)
+			})
+
+			it('cant equip an item if it doesnt meet the level requirements', () => {
+				expect(() => fighter.equip(poisonDagger)).toThrow()
+			})
+
+			it('can equip the same item if he meet the requirements', () => {
+				fighter.giveExperience(100)
+				fighter.equip(poisonDagger)
+				expect(fighter.equipment.rightHand).toBe(poisonDagger)
+			})
+
+			it('removes any other weapon if equips a two handed weapon', () => {
+				fighter.equip(rustedSword, 'leftHand')
+				expect(fighter.equipment.leftHand).toBe(rustedSword)
+				fighter.equip(longSpear)
+				expect(fighter.equipment.rightHand).toBe(longSpear)
+				expect(fighter.equipment.leftHand).not.toBeDefined()
+			})
 		})
 
-		it('can equip weapons and shields', () => {
-			fighter.equip(rustedSword)
-			fighter.equip(woodenBuckler)
-			expect(fighter.equipment.rightHand).toBe(rustedSword)
-			expect(fighter.equipment.leftHand).toBe(woodenBuckler)
-		})
+		describe('armor', () => {
+			it('can equip a chest wear', () => {
+				fighter.equip(sackclothTunic)
+				expect(fighter.equipment.chest).toBe(sackclothTunic)
+				const resistances = fighter.getResistances()
+				expect(resistances.blunt).toBeCloseTo(0.06, 2)
+				expect(resistances.pierce).toBeCloseTo(0.06, 2)
+				expect(resistances.cut).toBeCloseTo(0.06, 2)
+				expect(resistances.cold).toBeCloseTo(0.07, 2)
+			})
 
-		it('can equip two weapons', () => {
-			fighter.equip(rustedSword)
-			fighter.giveExperience(100)
-			fighter.equip(poisonDagger)
-			expect(fighter.equipment.rightHand).toBe(rustedSword)
-			expect(fighter.equipment.leftHand).toBe(poisonDagger)
-		})
+			it('can equip gloves', () => {
+				fighter.equip(ringmailGloves)
+				expect(fighter.equipment.gloves).toBe(ringmailGloves)
+				const resistances = fighter.getResistances()
+				expect(resistances.pierce).toBeCloseTo(0.15, 2)
+				expect(resistances.cut).toBeCloseTo(0.15, 2)
+			})
 
-		it('can equip to specific slot', () => {
-			fighter.equip(rustedSword, 'leftHand')
-			expect(fighter.equipment.leftHand).toBe(rustedSword)
-		})
+			it('can equip head wear', () => {
+				fighter.equip(leatherCap)
+				expect(fighter.equipment.head).toBe(leatherCap)
+				const resistances = fighter.getResistances()
+				expect(resistances.blunt).toBeCloseTo(0.08, 2)
+				expect(resistances.pierce).toBeCloseTo(0.08, 2)
+				expect(resistances.cut).toBeCloseTo(0.08, 2)
+			})
 
-		it('cant equip to unexistent spot', () => {
-			expect(() => fighter.equip(rustedSword, 'leftToe')).toThrow()
-		})
+			it('can equip leg wear', () => {
+				fighter.equip(leatherPants)
+				expect(fighter.equipment.head).toBe(leatherPants)
+				const resistances = fighter.getResistances()
+				expect(resistances.blunt).toBeCloseTo(0.1, 2)
+				expect(resistances.pierce).toBeCloseTo(0.1, 2)
+				expect(resistances.cut).toBeCloseTo(0.1, 2)
+			})
 
-		it('cant equip an item if it doesnt meet the stat requirements', () => {
-			expect(() => fighter.equip(heavyAxe)).toThrow()
-		})
+			it('can equip foot wear', () => {
+				fighter.equip(ironBoots)
+				expect(fighter.equipment.foot).toBe(ironBoots)
+				const resistances = fighter.getResistances()
+				expect(resistances.blunt).toBeCloseTo(0.1, 2)
+				expect(resistances.pierce).toBeCloseTo(0.1, 2)
+				expect(resistances.cut).toBeCloseTo(0.2, 2)
+			})
 
-		it('can equip the same item if he meet the requirements', () => {
-			fighter.giveExperience(experienceToLevel5)
-			fighter.investStatPoint('str')
-			fighter.equip(heavyAxe)
-			expect(fighter.equipment.rightHand).toBe(heavyAxe)
-		})
+			it('can equip up to six rings', () => {
+				fighter.equip(fireShrineRing)
+				fighter.equip(lifeRing)
+				fighter.equip(ironRing)
+				fighter.equip(fashionRing)
+				fighter.equip(coolRing)
+				fighter.equip(fancyRing)
+				expect(fighter.equipment.ringLeft1).toBe(fireShrineRing)
+				expect(fighter.equipment.ringLeft2).toBe(lifeRing)
+				expect(fighter.equipment.ringLeft3).toBe(ironRing)
+				expect(fighter.equipment.ringRight1).toBe(fashionRing)
+				expect(fighter.equipment.ringRight2).toBe(coolRing)
+				expect(fighter.equipment.ringRight3).toBe(fancyRing)
+			})
 
-		it('cant equip an item if it doesnt meet the level requirements', () => {
-			expect(() => fighter.equip(poisonDagger)).toThrow()
-		})
+			it('cant equip the seventh ring', () => {
+				fighter.equip(fireShrineRing)
+				fighter.equip(lifeRing)
+				fighter.equip(ironRing)
+				fighter.equip(fashionRing)
+				fighter.equip(coolRing)
+				fighter.equip(fancyRing)
+				expect(() => fighter.equip(hunterRing)).toThrow()
+			})
 
-		it('can equip the same item if he meet the requirements', () => {
-			fighter.giveExperience(100)
-			fighter.equip(poisonDagger)
-			expect(fighter.equipment.rightHand).toBe(poisonDagger)
-		})
+			it('can equip amulets', () => {
+				fighter.equip(wolfAmulet)
+				expect(fighter.equipment.amulet).toBe(wolfAmulet)
+			})
 
-		it('removes any other weapon if equips a two handed weapon', () => {
-			fighter.equip(rustedSword, 'leftHand')
-			expect(fighter.equipment.leftHand).toBe(rustedSword)
-			fighter.equip(longSpear)
-			expect(fighter.equipment.rightHand).toBe(longSpear)
-			expect(fighter.equipment.leftHand).not.toBeDefined()
-				
+			it('can equip cloaks', () => {
+				fighter.equip(snowCloak)
+				expect(fighter.equipment.cloak).toBe(snowCloak)
+			})
+
+			it('cant equip to wrong spots', () => {
+				expect(() => fighter.equip(wolfAmulet, 'leftHand')).toThrow()
+				expect(() => fighter.equip(fireShrineRing, 'head')).toThrow()
+				expect(() => fighter.equip(sackclothTunic, 'foot')).toThrow()
+			})
 		})
 	})
 

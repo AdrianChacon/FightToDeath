@@ -315,6 +315,69 @@ describe('Fighter', () => {
 		})
 	})
 
+	describe('effects', () => {
+		it('can recive instant heal effect', () => {
+			expect(fighter.applyEffect).toBeDefined()
+			fighter.applyDamage({ fire: 100})
+			expect(fighter.currentLife).toBeCloseTo(80)
+			fighter.applyEffect({
+				time: 'instant',
+				type: 'heal',
+				ammount: 100
+			})
+			expect(fighter.currentLife).toBeCloseTo(175)
+		})
+
+		it('can receive instant damage effect', () => {
+			fighter.applyEffect({
+				time: 'instant',
+				type: 'damage',
+				ammount: {
+					fire: 100
+				}
+			})
+			expect(fighter.currentLife).toBeCloseTo(80)
+		})
+
+		it('can stack effects', () => {
+			expect(fighter.effectStack).toBeDefined()
+			expect(fighter.consumeStack).toBeDefined()
+			const effect = {
+				time: 'turns',
+				turns: 4,
+				type: 'damage',
+				ammount: { blunt: 25 }
+			}
+			fighter.applyEffect(effect)
+			expect(fighter.effectStack).toContain(effect)
+			fighter.consumeStack()
+			fighter.consumeStack()
+			fighter.consumeStack()
+			fighter.consumeStack()
+			expect(fighter.currentLife).toBeCloseTo(80)
+		})
+
+		it('can apply an array of effects', () => {
+			const poisonEffect = [
+				{
+					time: 'turns',
+					turns: 4,
+					type: 'damage',
+					ammount: { poison: 25 }
+				},
+				{
+					time: 'instant',
+					type: 'damage',
+					ammount: { poison: 100 }
+				}
+			]
+
+			fighter.applyEffect(poisonEffect)
+			expect(fighter.effectStack).toContain(poisonEffect[0])
+			expect(fighter.currentLife).toBeCloseTo(80)
+		})
+	})
+
 	describe('level up and get stats', () => {
 		it('can level up', () => {
 			expect(fighter.getExperienceToNextLevel()).toEqual(100)

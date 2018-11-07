@@ -42,8 +42,17 @@ class Fighter {
 		this.level = config.level || 1
 		this.experience = config.experience || 0
 
+		this.effectStack = []
 		this.maxLife = this.getMaxLife()
 		this.currentLife = config.currentLife || this.maxLife
+	}
+
+	consumeStack(){
+		this.effectStack = this.effectStack.reduce((stack, effect) => {
+			this.applyEffect({ ...effect, time: 'instant'})
+			if(effect.turns > 0) stack.push({ ...effect, turns: effect.turns - 1})
+			return stack
+		}, [])
 	}
 
 	_getExperienceToLevel(level) {
@@ -61,6 +70,25 @@ class Fighter {
 		}
 	}
 
+	applyEffect(effect){
+		if(Array.isArray(effect)){
+			effect.forEach(effect => this.applyEffect(effect))
+			return
+		}
+		if(effect.time === 'instant'){
+			switch(effect.type){
+				case 'heal':
+					this.heal(effect.ammount)
+					break
+				case 'damage':
+					this.applyDamage(effect.ammount)
+					break
+			}
+		} else {
+			this.effectStack.push(effect)
+		}
+	}
+
 	_levelUp() {
 		this.level++
 		if(this.level % 5 === 0) this.statPoints ++
@@ -72,6 +100,11 @@ class Fighter {
 			this.statPoints --
 			this.baseStats[stat] ++
 		}
+	}
+
+	heal(ammount){
+		this.currentLife += ammount
+		if(this.currentLife > this.maxLife) this.currentLife = this.maxLife
 	}
 
 	applyDamage(damages){

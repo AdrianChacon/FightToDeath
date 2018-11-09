@@ -1,6 +1,5 @@
 const Fighter = require('./Fighter')
 const items = require('./items.json')
-const getItem = name => items.find(item => item.name === name)
 
 const itemBag = items.reduce((bag, item) => {
 	let name = item.name.replace(/ /g, '')

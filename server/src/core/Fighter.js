@@ -195,7 +195,7 @@ class Fighter {
 	getEffects(type){
 		const allEffects = this.getAllEffects()
 		if(!type) return allEffects
-		if(!validEffectTypes.includes(type)) throw new Error(`${stat} is not a valid effect type`)
+		if(!validEffectTypes.includes(type)) throw new Error(`${type} is not a valid effect type`)
 		return allEffects.filter(effect => effect.type === type)
 	}
 
@@ -223,13 +223,11 @@ class Fighter {
 			for(const i in item.require){
 				const { type, target, ammount } = item.require[i]
 				switch(type){
-					case 'stat':
-						const stats = this.baseStats
-						const targetAmmount = stats[target]
-						if(targetAmmount < ammount) throw new Error('Fighter did not meet the stat requirement')
-						break
-					case 'level':
-						if(this.level < ammount) throw new Error('Fighter did not meet the level requirement')
+				case 'stat':
+					if(this.baseStats[target] < ammount) throw new Error('Fighter did not meet the stat requirement')
+					break
+				case 'level':
+					if(this.level < ammount) throw new Error('Fighter did not meet the level requirement')
 				}
 			}
 		}
@@ -259,11 +257,11 @@ class Fighter {
 						return
 					}
 				}
-				throw new Error(`No empty ring spot`)
+				throw new Error('No empty ring spot')
 			}
 			this.equipment[item.type] = item
 		}else{
-			if(!validEquipmentSpots.includes(slot)) throw new Error(`${stat} is not a valid equipment spot`)
+			if(!validEquipmentSpots.includes(slot)) throw new Error(`${slot} is not a valid equipment spot`)
 			if(['weapon', 'shield'].includes(item.type) && !/Hand/.test(slot)) throw new Error(`Cant equip ${item.type} in ${slot}`)
 			if(/ring/.test(item.type) && !/ring/.test(slot)) throw new Error(`Cant equip rings in ${slot}`)
 			if(['head','chest','gloves','legs','foot','amulet','cloak'].includes(item.type) && item.type !== slot) throw new Error(`Cant equip ${item.type} item in ${slot} slot`)

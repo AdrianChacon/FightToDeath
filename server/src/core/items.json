@@ -11,8 +11,25 @@
     "id": 100,
     "name": "Wooden Buckler",
     "type": "shield",
+    "damage": [
+      { "type": "blunt", "scalar": "str", "ammount": 1}
+    ],
     "effect": [
       { "type": "resistance", "ammount": { "blunt": 0.05, "pierce": 0.05, "cut": 0.05 } }
+    ],
+    "skill": [
+      {
+				"name": "Shield Bash",
+        "target": "notSelf",
+        "cost": 10,
+				"effect": {
+					"time": "instant",
+					"type": "damage",
+					"ammount": [
+            { "type": "blunt", "scalar": "str", "ammount": 2 }
+          ]
+				}
+			}
     ]
   },{
     "id": 2,

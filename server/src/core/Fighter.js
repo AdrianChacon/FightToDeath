@@ -66,6 +66,39 @@ class Fighter {
 		return 100 * (level - 1) + (level - 2) * 20
 	}
 
+	getSkills(){
+		const baseSkills = [{
+			name: 'Attack',
+			target: 'notSelf',
+			cost: 0,
+			effect: {
+				time: 'instant',
+				type: 'damage',
+				ammount: this.getDamage()
+			}
+		}]
+
+		Object.values(this.equipment).forEach(piece => {
+			piece && piece.skill.forEach(skill => {
+				baseSkills.push({...skill, effect: this.parseEffects(skill.effect)})
+			})
+		})
+
+		return baseSkills
+	}
+
+	// Converts stat-based effects into absolute effects
+	parseEffects(effect){
+		if(Array.isArray(effect)) return effect.map(this.parseEffects)
+		if(effect.type === 'damage' && Array.isArray(effect.ammount)){
+			return { ...effect, ammount: effect.ammount.reduce((acc, {type, scalar, ammount, base}) => {
+				if(!acc[type]) acc[type] = 0
+				acc[type] += (scalar ? (this.baseStats[scalar] * ammount) : 0) + (base || 0)
+				return acc
+			}, {})}
+		}
+	}
+
 	getExperienceToNextLevel() {
 		return this._getExperienceToLevel(this.level + 1)
 	}

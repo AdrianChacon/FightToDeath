@@ -492,4 +492,38 @@ describe('Fighter', () => {
 			expect(fighter.currentLife).toBe(146.5)
 		})
 	})
+
+	describe('skills', () => {
+		it('have skills', () => {
+			expect(fighter.getSkills).toBeDefined()
+			expect(Array.isArray(fighter.getSkills())).not.toBeFalsy()
+		})
+
+		it('always have an attack skill', () => {
+			expect(fighter.getSkills()).toContainEqual({
+				name: 'Attack',
+				target: 'notSelf',
+				cost: 0,
+				effect: {
+					time: 'instant',
+					type: 'damage',
+					ammount: { blunt: 5 }
+				}
+			})
+		})
+
+		it('can get skills from equipment', () => {
+			fighter.equip(woodenBuckler)
+			expect(fighter.getSkills()).toContainEqual({
+				name: 'Shield Bash',
+				target: 'notSelf',
+				cost: 10,
+				effect: {
+					time: 'instant',
+					type: 'damage',
+					ammount: { blunt: 10 }
+				}
+			})
+		})
+	})
 })

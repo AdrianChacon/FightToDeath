@@ -98,10 +98,30 @@ describe('Fighter', () => {
 		})
 
 		it('have life', () => {
+			expect(fighter.currentLife).toBeDefined()
+			expect(fighter.maxLife).toBeDefined()
 			expect(fighter.currentLife).toBe(175)
 			expect(fighter.maxLife).toBe(175)
 			fighter = new Fighter({ ...baseConfig, currentLife: 75 })
 			expect(fighter.currentLife).toBe(75)
+		})
+
+		it('have stamina', () => {
+			expect(fighter.currentStamina).toBeDefined()
+			expect(fighter.maxStamina).toBeDefined()
+			expect(fighter.currentStamina).toBe(27)
+			expect(fighter.maxStamina).toBe(27)
+			fighter = new Fighter({ ...baseConfig, currentStamina: 10 })
+			expect(fighter.currentStamina).toBe(10)
+		})
+
+		it('have stamina recharge rate', () => {
+			expect(fighter.getStaminaRechargeRate).toBeDefined()
+			expect(fighter.getStaminaRechargeRate()).toBe(1)
+			fighter = new Fighter({ ...baseConfig, currentStamina: 10 })
+			fighter.nextTurn()
+			expect(fighter.currentStamina).toBe(11)
+
 		})
 
 		it('have a toHit ratio', () => {
@@ -337,6 +357,16 @@ describe('Fighter', () => {
 				}
 			})
 			expect(fighter.currentLife).toBeCloseTo(80)
+		})
+
+		it('can receive instant stamina effect', () => {
+			fighter = new Fighter({ ...baseConfig, currentStamina: 10 })
+			fighter.applyEffect({
+				time: 'instant',
+				type: 'stamina',
+				ammount: 10
+			})
+			expect(fighter.currentStamina).toBe(20)
 		})
 
 		it('can stack effects', () => {

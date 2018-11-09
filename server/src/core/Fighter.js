@@ -44,7 +44,14 @@ class Fighter {
 
 		this.effectStack = []
 		this.maxLife = this.getMaxLife()
+		this.maxStamina = this.getMaxStamina()
 		this.currentLife = config.currentLife || this.maxLife
+		this.currentStamina = config.currentStamina || this.maxStamina
+	}
+
+	nextTurn(){
+		this.consumeStack()
+		this.regenerateStamina()
 	}
 
 	consumeStack(){
@@ -77,12 +84,15 @@ class Fighter {
 		}
 		if(effect.time === 'instant'){
 			switch(effect.type){
-				case 'heal':
-					this.heal(effect.ammount)
-					break
-				case 'damage':
-					this.applyDamage(effect.ammount)
-					break
+			case 'heal':
+				this.heal(effect.ammount)
+				break
+			case 'damage':
+				this.applyDamage(effect.ammount)
+				break
+			case 'stamina':
+				this.applyStamina(effect.ammount)
+				break
 			}
 		} else {
 			this.effectStack.push(effect)
@@ -107,6 +117,19 @@ class Fighter {
 		if(this.currentLife > this.maxLife) this.currentLife = this.maxLife
 	}
 
+	regenerateStamina(){
+		this.applyEffect({
+			time: 'instant',
+			type: 'stamina',
+			ammount: this.getStaminaRechargeRate()
+		})
+	}
+
+	applyStamina(ammount){
+		this.currentStamina += ammount
+		if(this.currentStamina > this.maxStamina) this.currentStamina = this.maxStamina
+	}
+
 	applyDamage(damages){
 		const resistances = this.getResistances()
 		const computedDamage = reduceSum(scaleDown(damages, resistances))
@@ -117,7 +140,20 @@ class Fighter {
 
 	getMaxLife() {
 		const { str, res, con } = this.baseStats
-		return (con * 20 + res * 10 + str * 5) * (1 + (this.level - 1) / 100)
+		return Math.floor((con * 20 + res * 10 + str * 5) * (1 + (this.level - 1) / 100))
+	}
+
+	getMaxStamina() {
+		const { dex, res, con, spr, int } = this.baseStats
+		const resOrSpr = Math.max(res, spr)
+		const conOrInt = Math.max(con, int)
+		return Math.floor((resOrSpr * 3 + conOrInt * 1.5 + dex) * (1 + (this.level - 1) / 500))
+	}
+
+	getStaminaRechargeRate(){
+		const { spr, res } = this.baseStats
+		const resOrSpr = Math.max(spr, res)
+		return Math.floor(resOrSpr/5)
 	}
 
 	getToHitRatio() {

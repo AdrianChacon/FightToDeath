@@ -594,6 +594,21 @@ describe('Fighter', () => {
 			expect(fighter.cooldowns).toEqual({	})
 		})
 
+		it('cant use a skill if it doesnt have enought stamina', () => {
+			fighter = new Fighter({ ...baseConfig, currentStamina: 9})
+			fighter.equip(woodenBuckler)
+			expect(() => fighter.useSkill(399)).toThrow()
+		})
 
+		it('cant use a skill if it doesnt have it', () => {
+			fighter = new Fighter({ ...baseConfig, currentStamina: 9})
+			expect(() => fighter.useSkill(399)).toThrow()
+		})
+
+		it('cant use a skill if its in cooldown', () => {
+			fighter.equip(woodenBuckler)
+			fighter.useSkill(399)
+			expect(() => fighter.useSkill(399)).toThrow()
+		})
 	})
 })

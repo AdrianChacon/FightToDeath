@@ -66,26 +66,6 @@ class Fighter {
 		return 100 * (level - 1) + (level - 2) * 20
 	}
 
-	getSkills(){
-		const baseSkills = [{
-			name: 'Attack',
-			target: 'notSelf',
-			cost: 0,
-			effect: {
-				time: 'instant',
-				type: 'damage',
-				ammount: this.getDamage()
-			}
-		}]
-
-		Object.values(this.equipment).forEach(piece => {
-			piece && piece.skill.forEach(skill => {
-				baseSkills.push({...skill, effect: this.parseEffects(skill.effect)})
-			})
-		})
-
-		return baseSkills
-	}
 
 	// Converts stat-based effects into absolute effects
 	parseEffects(effect){
@@ -232,6 +212,35 @@ class Fighter {
 		return allEffects.filter(effect => effect.type === type)
 	}
 
+
+	getAllSkills(){
+		const baseSkills = [{
+			id: 0,
+			name: 'Attack',
+			target: 'notSelf',
+			cost: 0,
+			effect: {
+				time: 'instant',
+				type: 'damage',
+				ammount: this.getDamage()
+			}
+		}]
+
+		Object.values(this.equipment).forEach(piece => {
+			piece && piece.skill.forEach(skill => {
+				baseSkills.push({...skill, effect: this.parseEffects(skill.effect)})
+			})
+		})
+
+		return baseSkills
+	}
+
+	getSkill(id){
+		const skill = this.getAllSkills().find(skill => skill.id === id) 
+		if(!skill) throw new Error('The fighter did not have the skill')
+		return skill
+	}
+
 	getResistances(){
 		const { res, con, spr, int} = this.baseStats
 
@@ -300,6 +309,13 @@ class Fighter {
 			if(['head','chest','gloves','legs','foot','amulet','cloak'].includes(item.type) && item.type !== slot) throw new Error(`Cant equip ${item.type} item in ${slot} slot`)
 			this.equipment[slot] = item
 		}
+	}
+
+	useSkill(id){
+		const skill = this.getSkill(399)
+		if(skill.cost > this.currentStamina) throw new Error(`Not enought stamina to execute ${skill.name}`)
+		this.currentStamina -= skill.cost
+		return skill.effect
 	}
 }
 

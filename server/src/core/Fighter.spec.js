@@ -495,12 +495,13 @@ describe('Fighter', () => {
 
 	describe('skills', () => {
 		it('have skills', () => {
-			expect(fighter.getSkills).toBeDefined()
-			expect(Array.isArray(fighter.getSkills())).not.toBeFalsy()
+			expect(fighter.getAllSkills).toBeDefined()
+			expect(Array.isArray(fighter.getAllSkills())).not.toBeFalsy()
 		})
 
 		it('always have an attack skill', () => {
-			expect(fighter.getSkills()).toContainEqual({
+			expect(fighter.getAllSkills()).toContainEqual({
+				id: 0,
 				name: 'Attack',
 				target: 'notSelf',
 				cost: 0,
@@ -514,7 +515,8 @@ describe('Fighter', () => {
 
 		it('can get skills from equipment', () => {
 			fighter.equip(woodenBuckler)
-			expect(fighter.getSkills()).toContainEqual({
+			expect(fighter.getAllSkills()).toContainEqual({
+				id: 399,
 				name: 'Shield Bash',
 				target: 'notSelf',
 				cost: 10,
@@ -524,6 +526,32 @@ describe('Fighter', () => {
 					ammount: { blunt: 10 }
 				}
 			})
+		})
+
+		it('can get a skill given it id', () => {
+			expect(fighter.getSkill).toBeDefined()
+			expect(fighter.getSkill(0)).toEqual({
+				id: 0,
+				name: 'Attack',
+				target: 'notSelf',
+				cost: 0,
+				effect: {
+					time: 'instant',
+					type: 'damage',
+					ammount: { blunt: 5 }
+				}
+			})
+		})
+
+		it('can use skill', () => {
+			expect(fighter.useSkill).toBeDefined()
+			fighter.equip(woodenBuckler)
+			expect(fighter.useSkill(399)).toEqual({
+				time: 'instant',
+				type: 'damage',
+				ammount: { blunt: 10 }
+			})
+			expect(fighter.currentStamina).toBe(17)			
 		})
 	})
 })

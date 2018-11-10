@@ -19,6 +19,7 @@
     ],
     "skill": [
       {
+        "id": 399,
 				"name": "Shield Bash",
         "target": "notSelf",
         "cost": 10,

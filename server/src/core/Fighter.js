@@ -47,11 +47,13 @@ class Fighter {
 		this.maxStamina = this.getMaxStamina()
 		this.currentLife = config.currentLife || this.maxLife
 		this.currentStamina = config.currentStamina || this.maxStamina
+		this.cooldowns = {}
 	}
 
 	nextTurn(){
 		this.consumeStack()
 		this.regenerateStamina()
+		this._decreaseCooldowns()
 	}
 
 	consumeStack(){
@@ -66,6 +68,12 @@ class Fighter {
 		return 100 * (level - 1) + (level - 2) * 20
 	}
 
+	_decreaseCooldowns(){
+		Object.keys(this.cooldowns).forEach(id => {
+			this.cooldowns[id] --
+			if(this.cooldowns[id] === 0) delete this.cooldowns[id]
+		})
+	}
 
 	// Converts stat-based effects into absolute effects
 	parseEffects(effect){
@@ -313,7 +321,9 @@ class Fighter {
 
 	useSkill(id){
 		const skill = this.getSkill(399)
+		if(this.cooldowns[id]) throw new Error(`${skill.name} is not ready`)
 		if(skill.cost > this.currentStamina) throw new Error(`Not enought stamina to execute ${skill.name}`)
+		this.cooldowns[id] = skill.cooldown
 		this.currentStamina -= skill.cost
 		return skill.effect
 	}

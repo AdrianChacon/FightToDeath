@@ -519,6 +519,7 @@ describe('Fighter', () => {
 				id: 399,
 				name: 'Shield Bash',
 				target: 'notSelf',
+				cooldown: 10,
 				cost: 10,
 				effect: {
 					time: 'instant',
@@ -553,5 +554,46 @@ describe('Fighter', () => {
 			})
 			expect(fighter.currentStamina).toBe(17)			
 		})
+
+		it('have a cooldown register', () => {
+			expect(fighter.cooldowns).toBeDefined()
+			expect(fighter.cooldowns).toBeInstanceOf(Object)
+		})
+
+		it('increases cooldown time of a skill when it uses it', () => {
+			fighter.equip(woodenBuckler)
+			fighter.useSkill(399)
+			expect(fighter.cooldowns).toEqual({
+				399: 10
+			})
+		})
+
+		it('decreasses cooldown every turn', () => {
+			fighter.equip(woodenBuckler)
+			fighter.useSkill(399)
+			expect(fighter.cooldowns).toEqual({	399: 10	})
+			fighter.nextTurn()
+			expect(fighter.cooldowns).toEqual({	399: 9 })
+		})
+
+		it('removes cooldown registry when it gets to 0', () => {
+			fighter.equip(woodenBuckler)
+			fighter.useSkill(399)
+			expect(fighter.cooldowns).toEqual({	399: 10	})
+			fighter.nextTurn()
+			fighter.nextTurn()
+			fighter.nextTurn()
+			fighter.nextTurn()
+			fighter.nextTurn()
+			expect(fighter.cooldowns).toEqual({	399: 5 })
+			fighter.nextTurn()
+			fighter.nextTurn()
+			fighter.nextTurn()
+			fighter.nextTurn()
+			fighter.nextTurn()
+			expect(fighter.cooldowns).toEqual({	})
+		})
+
+
 	})
 })

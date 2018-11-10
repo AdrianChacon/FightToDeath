@@ -23,6 +23,7 @@
 				"name": "Shield Bash",
         "target": "notSelf",
         "cost": 10,
+        "cooldown": 10,
 				"effect": {
 					"time": "instant",
 					"type": "damage",

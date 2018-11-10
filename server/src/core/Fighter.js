@@ -41,6 +41,7 @@ class Fighter {
 		this.statPoints = config.statPoints || 0
 		this.level = config.level || 1
 		this.experience = config.experience || 0
+		this.spentExperience = config.spentExperience || 0
 
 		this.effectStack = []
 		this.maxLife = this.getMaxLife()
@@ -48,6 +49,7 @@ class Fighter {
 		this.currentLife = config.currentLife || this.maxLife
 		this.currentStamina = config.currentStamina || this.maxStamina
 		this.cooldowns = {}
+		this.perks = config.perks || []
 	}
 
 	nextTurn(){
@@ -96,6 +98,13 @@ class Fighter {
 		while (this.getExperienceToNextLevel() <= this.experience) {
 			this._levelUp()
 		}
+	}
+
+	adquirePerk(perk){
+		const remainExperience = this.experience - this.spentExperience
+		if(perk.cost > remainExperience) throw new Error(`Not enought experience to adquire ${perk.name}`)
+		this.spentExperience += perk.cost
+		this.perks.push(perk)
 	}
 
 	applyEffect(effect){
@@ -209,8 +218,16 @@ class Fighter {
 	}
 
 	getAllEffects(){
-		return Object.values(this.equipment)
+		const objectEffects = Object.values(this.equipment)
 			.reduce((acc, item) => (item && item.effect) ? [...acc, ...item.effect] : acc ,[])
+		const perksEffects = this.perks
+			.map(perk => perk.effect)
+			.filter(effect => !!effect)
+			.reduce((acc, effect) => Array.isArray(effect) ?
+				[...acc, ...effect] : 
+				[ ...acc, effect] , [])
+
+		return [ ...objectEffects, ...perksEffects]
 	}
 
 	getEffects(type){

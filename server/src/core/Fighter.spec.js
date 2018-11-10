@@ -611,4 +611,39 @@ describe('Fighter', () => {
 			expect(() => fighter.useSkill(399)).toThrow()
 		})
 	})
+
+	describe('perks', () => {
+		const fireAffinity = {
+			id: 1,
+			cost: 100,
+			name: 'Fire affinity',
+			effect:  [
+				{
+					type: 'resistance', ammount: { fire: 0.15 }
+				}
+			]
+		}
+
+		it('have adquired perks', () => {
+			expect(fighter.perks).toBeDefined()
+		})
+
+		it('have spent experience', () => {
+			expect(fighter.spentExperience).toBeDefined()
+		})
+
+		it('can adquire a perk if it has enought experience', () => {
+			expect(fighter.adquirePerk).toBeDefined()			
+			fighter.giveExperience(100)
+			
+			fighter.adquirePerk(fireAffinity)
+			expect(fighter.perks).toContainEqual(fireAffinity)
+		})
+
+		it('adquired perks gives resistance bonuses', () => {
+			fighter.giveExperience(100)
+			fighter.adquirePerk(fireAffinity)
+			expect(fighter.getResistances().fire).toBeCloseTo(0.2, 2)
+		})
+	})
 })

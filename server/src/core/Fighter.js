@@ -50,12 +50,14 @@ class Fighter {
 		this.currentStamina = config.currentStamina || this.maxStamina
 		this.cooldowns = {}
 		this.perks = config.perks || []
+		this._turnsToPlay = 0
 	}
 
 	nextTurn(){
 		this.consumeStack()
 		this.regenerateStamina()
 		this._decreaseCooldowns()
+		this._turnsToPlay--
 	}
 
 	consumeStack(){
@@ -166,6 +168,14 @@ class Fighter {
 		this.currentLife = this.currentLife > computedDamage ? 
 			this.currentLife - computedDamage :
 			0
+	}
+
+	getStats(){
+		return this.baseStats
+	}
+
+	getTurnsToPlay(){
+		return this._turnsToPlay
 	}
 
 	getMaxLife() {
@@ -348,11 +358,13 @@ class Fighter {
 	}
 
 	useSkill(id){
-		const skill = this.getSkill(399)
+		const skill = this.getSkill(id)
+		if(this.getTurnsToPlay() !== 0) throw new Error(`${this.name} is not ready`)
 		if(this.cooldowns[id]) throw new Error(`${skill.name} is not ready`)
 		if(skill.cost > this.currentStamina) throw new Error(`Not enought stamina to execute ${skill.name}`)
 		this.cooldowns[id] = skill.cooldown
 		this.currentStamina -= skill.cost
+		this._turnsToPlay += 20 - this.getStats().spd
 		return skill.effect
 	}
 }

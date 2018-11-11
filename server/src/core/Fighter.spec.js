@@ -80,15 +80,16 @@ describe('Fighter', () => {
 		})
 
 		it('have base stats', () => {
-			expect(typeof fighter.baseStats).toEqual('object')
-			expect(fighter.baseStats.str).toEqual(5)
-			expect(fighter.baseStats.res).toEqual(5)
-			expect(fighter.baseStats.int).toEqual(5)
-			expect(fighter.baseStats.dex).toEqual(5)
-			expect(fighter.baseStats.spr).toEqual(5)
-			expect(fighter.baseStats.spd).toEqual(5)
-			expect(fighter.baseStats.con).toEqual(5)
-			expect(fighter.baseStats.lck).toEqual(5)
+			expect(fighter.getStats).toBeDefined()
+			const {str, res, int, dex, spr, spd, con, lck} = fighter.getStats()
+			expect(str).toEqual(5)
+			expect(res).toEqual(5)
+			expect(int).toEqual(5)
+			expect(dex).toEqual(5)
+			expect(spr).toEqual(5)
+			expect(spd).toEqual(5)
+			expect(con).toEqual(5)
+			expect(lck).toEqual(5)
 			expect(() => new Fighter({ id: '99999' })).toThrow()
 		})
 
@@ -412,6 +413,32 @@ describe('Fighter', () => {
 			fighter.applyEffect(poisonEffect)
 			expect(fighter.effectStack).toContain(poisonEffect[0])
 			expect(fighter.currentLife).toBeCloseTo(80)
+		})
+	})
+
+	describe('turns', () => {
+		it('have a turns to play', () => {
+			expect(fighter.getTurnsToPlay).toBeDefined()
+		})
+
+		it('starts at 0', () => {
+			expect(fighter.getTurnsToPlay()).toBe(0)
+		})
+
+		it('increases 20 - fighter speed stat after each action', () => {
+			fighter.useSkill(0)
+			expect(fighter.getTurnsToPlay()).toBe(15)
+		})
+
+		it('cant play if turn to play is not 0', () => {
+			fighter.useSkill(0)
+			expect(() => fighter.useSkill(0)).toThrow()
+		})
+
+		it('next turn decreases the turn to play', () => {
+			fighter.useSkill(0)
+			fighter.nextTurn()
+			expect(fighter.getTurnsToPlay()).toBe(14)
 		})
 	})
 

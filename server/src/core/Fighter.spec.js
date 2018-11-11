@@ -1,10 +1,18 @@
 const Fighter = require('./Fighter')
 const items = require('./items.json')
+const perks = require('./perks.json')
 
 const itemBag = items.reduce((bag, item) => {
 	let name = item.name.replace(/ /g, '')
 	name = name.slice(0,1).toLowerCase() + name.slice(1)
 	bag[name] = item
+	return bag
+},{})
+
+const perkBag = perks.reduce((bag, skill) => {
+	let name = skill.name.replace(/ /g, '')
+	name = name.slice(0,1).toLowerCase() + name.slice(1)
+	bag[name] = skill
 	return bag
 },{})
 
@@ -230,7 +238,7 @@ describe('Fighter', () => {
 				expect(() => fighter.equip(poisonDagger)).toThrow()
 			})
 
-			it('can equip the same item if he meet the requirements', () => {
+			it('can equip an item if he meet the level requirements', () => {
 				fighter.giveExperience(100)
 				fighter.equip(poisonDagger)
 				expect(fighter.equipment.rightHand).toBe(poisonDagger)
@@ -610,19 +618,18 @@ describe('Fighter', () => {
 			fighter.useSkill(399)
 			expect(() => fighter.useSkill(399)).toThrow()
 		})
+
+		it('doesnt list the same skill twice', () => {
+			const {fireAffinity, sparkMastery} = perkBag
+			fighter.giveExperience(180)
+			fighter.adquirePerk(fireAffinity)
+			fighter.adquirePerk(sparkMastery)
+			expect(fighter.getAllSkills()).toHaveLength(2)
+		})
 	})
 
 	describe('perks', () => {
-		const fireAffinity = {
-			id: 1,
-			cost: 100,
-			name: 'Fire affinity',
-			effect:  [
-				{
-					type: 'resistance', ammount: { fire: 0.15 }
-				}
-			]
-		}
+		const {fireAffinity} = perkBag
 
 		it('have adquired perks', () => {
 			expect(fighter.perks).toBeDefined()
@@ -644,6 +651,12 @@ describe('Fighter', () => {
 			fighter.giveExperience(100)
 			fighter.adquirePerk(fireAffinity)
 			expect(fighter.getResistances().fire).toBeCloseTo(0.2, 2)
+		})
+
+		it('adquired perks gives skills', () => {
+			fighter.giveExperience(100)
+			fighter.adquirePerk(fireAffinity)
+			expect(fighter.getAllSkills()).toContainEqual(fireAffinity.skill[0])
 		})
 	})
 })

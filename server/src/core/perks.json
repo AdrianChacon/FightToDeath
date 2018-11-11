@@ -1,0 +1,48 @@
+[
+  {
+    "id": 1,
+    "cost": 100,
+    "name": "Fire Affinity",
+    "effect":  [
+      {
+        "type": "resistance", "ammount": { "fire": 0.15 }
+      }
+    ],
+    "skill": [
+      {
+        "id": 97,
+        "name": "Ignite air",
+        "target": "any",
+        "cost": 25,
+        "cooldown": 30,
+        "effect": {
+          "time": "instant",
+          "type": "damage",
+          "ammount": [
+            { "type": "fire", "scalar": "int", "ammount": "4"}
+          ]
+        }
+      }
+    ]
+  },{
+    "id": 3,
+    "cost": 80,
+    "name": "Spark Mastery",
+    "skill": [
+      {
+        "id": 97,
+        "name": "Ignite air",
+        "target": "any",
+        "cost": 25,
+        "cooldown": 30,
+        "effect": {
+          "time": "instant",
+          "type": "damage",
+          "ammount": [
+            { "type": "fire", "scalar": "int", "ammount": "4"}
+          ]
+        }
+      }
+    ]
+  }
+]

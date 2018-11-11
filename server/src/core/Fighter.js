@@ -253,7 +253,18 @@ class Fighter {
 
 		Object.values(this.equipment).forEach(piece => {
 			piece && piece.skill.forEach(skill => {
-				baseSkills.push({...skill, effect: this.parseEffects(skill.effect)})
+				if(baseSkills.some(({id}) => id === skill.id)) return
+				baseSkills.push({
+					...skill,
+					effect: this.parseEffects(skill.effect)})
+			})
+		})
+
+		this.perks.forEach(perk => {
+			if(!perk.skill) return
+			perk.skill.forEach(skill => {
+				if(baseSkills.some(({id}) => id === skill.id)) return
+				baseSkills.push(skill)
 			})
 		})
 

@@ -2,7 +2,7 @@ const { scaleDown, reduceSum, add } = require('./vector.utils')
 
 const validStats = ['str', 'res', 'int', 'dex', 'spr', 'spd', 'con', 'lck']
 const validEquipmentSpots = ['head','shoulder','gloves','legs','foot','ringLeft1','ringLeft2','ringLeft3','ringRight1','ringRight2','ringRight3','amulet','leftHand','rightHand','cloak']
-const validEffectTypes = ['resistance', 'stat']
+const validEffectTypes = ['resistance', 'stat', 'maxLife']
 
 class Fighter {
 	constructor(config) {
@@ -45,9 +45,8 @@ class Fighter {
 		this.spentExperience = config.spentExperience || 0
 
 		this.effectStack = []
-		this.maxLife = this.getMaxLife()
 		this.maxStamina = this.getMaxStamina()
-		this.currentLife = config.currentLife || this.maxLife
+		this.currentLife = config.currentLife || this.getMaxLife()
 		this.currentStamina = config.currentStamina || this.maxStamina
 		this.cooldowns = {}
 		this._turnsToPlay = 0
@@ -146,7 +145,8 @@ class Fighter {
 
 	heal(amount){
 		this.currentLife += amount
-		if(this.currentLife > this.maxLife) this.currentLife = this.maxLife
+		const maxLife = this.getMaxLife()
+		if(this.currentLife > maxLife) this.currentLife = maxLife
 	}
 
 	regenerateStamina(){
@@ -181,7 +181,11 @@ class Fighter {
 
 	getMaxLife() {
 		const { str, res, con } = this.getStats()
-		return Math.floor((con * 20 + res * 10 + str * 5) * (1 + (this.level - 1) / 100))
+		const maxLifeEffects = reduceSum(
+			this.getEffects('maxLife')
+				.map(effect => effect.amount)
+		)
+		return Math.floor((con * 20 + res * 10 + str * 5) * (1 + (this.level - 1) / 100)) + maxLifeEffects
 	}
 
 	getMaxStamina() {
@@ -325,7 +329,15 @@ class Fighter {
 
 		if(!slot){
 			if(['weapon', 'shield'].includes(item.type)){
+				//If is a twohanded, clean
 				if(item.twoHanded){
+					this.equipment.rightHand = undefined
+					this.equipment.leftHand = undefined
+				}
+
+				//If there is a twohanded equiped, clean
+				const { rightHand, leftHand } = this.equipment
+				if( (rightHand && rightHand.twoHanded) || (leftHand && leftHand.twoHanded)){
 					this.equipment.rightHand = undefined
 					this.equipment.leftHand = undefined
 				}

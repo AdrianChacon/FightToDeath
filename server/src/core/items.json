@@ -118,6 +118,7 @@
     "name": "Life Ring",
     "type": "ring",
     "effect": [
+      { "type":"maxLife", "amount": 100 }
     ]
   },{
     "id": 703,
@@ -134,7 +135,10 @@
   },{
     "id": 706,
     "name": "Fancy Ring",
-    "type": "ring"
+    "type": "ring",
+    "effect": [
+      { "type": "stat", "amount": { "str": 1 }}
+    ]
   },{
     "id": 707,
     "name": "Hunter Ring",

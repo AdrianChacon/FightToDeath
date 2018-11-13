@@ -107,9 +107,9 @@ describe('Fighter', () => {
 
 		it('have life', () => {
 			expect(fighter.currentLife).toBeDefined()
-			expect(fighter.maxLife).toBeDefined()
+			expect(fighter.getMaxLife).toBeDefined()
 			expect(fighter.currentLife).toBe(175)
-			expect(fighter.maxLife).toBe(175)
+			expect(fighter.getMaxLife()).toBe(175)
 			fighter = new Fighter({ ...baseConfig, currentLife: 75 })
 			expect(fighter.currentLife).toBe(75)
 		})
@@ -700,6 +700,22 @@ describe('Fighter', () => {
 	})
 
 	describe('random test', () => {
-		
+		it('Equips a ring and gets additional strength and life', () => {
+			fighter.equip(fancyRing)
+			expect(fighter.getStats().str).toBe(6)
+			expect(fighter.getMaxLife()).toBe(180)
+		})
+
+		it('Equips a 2-handed polearm, then a sword, and it only has the sword', () => {
+			fighter.equip(longSpear)
+			fighter.equip(rustedSword)
+			expect(fighter.equipment.rightHand).toBe(rustedSword)
+			expect(fighter.equipment.leftHand).not.toBeDefined()
+		})
+
+		it('Equips a ring and get additional max life', () => {
+			fighter.equip(lifeRing)
+			expect(fighter.getMaxLife()).toBe(275)
+		})
 	})
 })

@@ -5,17 +5,17 @@
     "type": "weapon",
     "family": "sword",
     "damage": [
-      { "type": "cut", "scalar": "str", "ammount": 1.5}
+      { "type": "cut", "scalar": "str", "amount": 1.5}
     ]
   },{
     "id": 100,
     "name": "Wooden Buckler",
     "type": "shield",
     "damage": [
-      { "type": "blunt", "scalar": "str", "ammount": 1}
+      { "type": "blunt", "scalar": "str", "amount": 1}
     ],
     "effect": [
-      { "type": "resistance", "ammount": { "blunt": 0.05, "pierce": 0.05, "cut": 0.05 } }
+      { "type": "resistance", "amount": { "blunt": 0.05, "pierce": 0.05, "cut": 0.05 } }
     ],
     "skill": [
       {
@@ -27,8 +27,8 @@
 				"effect": {
 					"time": "instant",
 					"type": "damage",
-					"ammount": [
-            { "type": "blunt", "scalar": "str", "ammount": 2 }
+					"amount": [
+            { "type": "blunt", "scalar": "str", "amount": 2 }
           ]
 				}
 			}
@@ -40,10 +40,10 @@
     "family": "axe", 
     "twoHanded": true,
     "damage": [
-      { "type": "cut", "scalar": "str", "ammount": 4}
+      { "type": "cut", "scalar": "str", "amount": 4}
     ],
     "require": [
-      { "type": "stat", "target": "str", "ammount": 6}
+      { "type": "stat", "target": "str", "amount": 6}
     ]
   },{
     "id": 3,
@@ -51,11 +51,11 @@
     "type": "weapon",
     "family": "dagger",
     "damage": [
-      { "type": "pierce", "scalar": "str", "ammount": 1.2},
+      { "type": "pierce", "scalar": "str", "amount": 1.2},
       { "type": "poison", "base": 2}
     ],
     "require": [
-      { "type": "level", "ammount": 2}
+      { "type": "level", "amount": 2}
     ]
   },{
     "id": 4,
@@ -64,7 +64,7 @@
     "family": "spear",
     "twoHanded": true,
     "damage": [
-      { "type": "pierce", "scalar": "str", "ammount": 1.2}
+      { "type": "pierce", "scalar": "str", "amount": 1.2}
     ]
   },{
     "id": 201,
@@ -72,7 +72,7 @@
     "type": "chest",
     "family": "tunic",
     "effect": [
-      { "type": "resistance", "ammount": { "blunt": 0.01, "pierce": 0.01, "cut": 0.01, "cold": 0.02 } }
+      { "type": "resistance", "amount": { "blunt": 0.01, "pierce": 0.01, "cut": 0.01, "cold": 0.02 } }
     ]
   },{
     "id": 301,
@@ -80,7 +80,7 @@
     "type": "gloves",
     "family": "ringmail",
     "effect": [
-      { "type": "resistance", "ammount": { "pierce": 0.10, "cut": 0.10 } }
+      { "type": "resistance", "amount": { "pierce": 0.10, "cut": 0.10 } }
     ]
   },{
     "id": 401,
@@ -88,7 +88,7 @@
     "type": "head",
     "family": "leather",
     "effect": [
-      { "type": "resistance", "ammount": { "blunt": 0.03, "pierce": 0.03, "cut": 0.03 } }
+      { "type": "resistance", "amount": { "blunt": 0.03, "pierce": 0.03, "cut": 0.03 } }
     ]
   },{
     "id": 501,
@@ -96,7 +96,7 @@
     "type": "head",
     "family": "leather",
     "effect": [
-      { "type": "resistance", "ammount": { "blunt": 0.05, "pierce": 0.05, "cut": 0.05 } }
+      { "type": "resistance", "amount": { "blunt": 0.05, "pierce": 0.05, "cut": 0.05 } }
     ]
   },{
     "id": 601,
@@ -104,14 +104,14 @@
     "type": "foot",
     "family": "iron",
     "effect": [
-      { "type": "resistance", "ammount": { "blunt": 0.05, "pierce": 0.05, "cut": 0.15 } }
+      { "type": "resistance", "amount": { "blunt": 0.05, "pierce": 0.05, "cut": 0.15 } }
     ]
   },{
     "id": 701,
     "name": "Fire Shrine Ring",
     "type": "ring",
     "effect": [
-      { "type": "resistance", "ammount": { "fire": 0.15 } }
+      { "type": "resistance", "amount": { "fire": 0.15 } }
     ]
   },{
     "id": 702,

@@ -5,7 +5,7 @@
     "name": "Fire Affinity",
     "effect":  [
       {
-        "type": "resistance", "ammount": { "fire": 0.15 }
+        "type": "resistance", "amount": { "fire": 0.15 }
       }
     ],
     "skill": [
@@ -18,8 +18,8 @@
         "effect": {
           "time": "instant",
           "type": "damage",
-          "ammount": [
-            { "type": "fire", "scalar": "int", "ammount": "4"}
+          "amount": [
+            { "type": "fire", "scalar": "int", "amount": "4"}
           ]
         }
       }
@@ -38,8 +38,8 @@
         "effect": {
           "time": "instant",
           "type": "damage",
-          "ammount": [
-            { "type": "fire", "scalar": "int", "ammount": "4"}
+          "amount": [
+            { "type": "fire", "scalar": "int", "amount": "4"}
           ]
         }
       }

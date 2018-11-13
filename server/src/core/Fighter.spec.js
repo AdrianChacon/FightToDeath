@@ -351,7 +351,7 @@ describe('Fighter', () => {
 			fighter.applyEffect({
 				time: 'instant',
 				type: 'heal',
-				ammount: 100
+				amount: 100
 			})
 			expect(fighter.currentLife).toBeCloseTo(175)
 		})
@@ -360,7 +360,7 @@ describe('Fighter', () => {
 			fighter.applyEffect({
 				time: 'instant',
 				type: 'damage',
-				ammount: {
+				amount: {
 					fire: 100
 				}
 			})
@@ -372,7 +372,7 @@ describe('Fighter', () => {
 			fighter.applyEffect({
 				time: 'instant',
 				type: 'stamina',
-				ammount: 10
+				amount: 10
 			})
 			expect(fighter.currentStamina).toBe(20)
 		})
@@ -384,15 +384,27 @@ describe('Fighter', () => {
 				time: 'turns',
 				turns: 4,
 				type: 'damage',
-				ammount: { blunt: 25 }
+				amount: { blunt: 25 }
 			}
 			fighter.applyEffect(effect)
-			expect(fighter.effectStack).toContain(effect)
+			expect(fighter.effectStack).toContainEqual(effect)
 			fighter.consumeStack()
 			fighter.consumeStack()
 			fighter.consumeStack()
 			fighter.consumeStack()
 			expect(fighter.currentLife).toBeCloseTo(80)
+		})
+
+		it('cant stack stats modifiers', () => {
+			fighter.applyEffect({
+				time: 'turns',
+				type: 'stat',
+				turns: 1,
+				amount: {
+					str: 1 
+				}
+			})
+			expect(fighter.getStats().str).toBe(6)
 		})
 
 		it('can apply an array of effects', () => {
@@ -401,17 +413,17 @@ describe('Fighter', () => {
 					time: 'turns',
 					turns: 4,
 					type: 'damage',
-					ammount: { poison: 25 }
+					amount: { poison: 25 }
 				},
 				{
 					time: 'instant',
 					type: 'damage',
-					ammount: { poison: 100 }
+					amount: { poison: 100 }
 				}
 			]
 
 			fighter.applyEffect(poisonEffect)
-			expect(fighter.effectStack).toContain(poisonEffect[0])
+			expect(fighter.effectStack).toContainEqual(poisonEffect[0])
 			expect(fighter.currentLife).toBeCloseTo(80)
 		})
 	})
@@ -543,7 +555,7 @@ describe('Fighter', () => {
 				effect: {
 					time: 'instant',
 					type: 'damage',
-					ammount: { blunt: 5 }
+					amount: { blunt: 5 }
 				}
 			})
 		})
@@ -559,7 +571,7 @@ describe('Fighter', () => {
 				effect: {
 					time: 'instant',
 					type: 'damage',
-					ammount: { blunt: 10 }
+					amount: { blunt: 10 }
 				}
 			})
 		})
@@ -574,7 +586,7 @@ describe('Fighter', () => {
 				effect: {
 					time: 'instant',
 					type: 'damage',
-					ammount: { blunt: 5 }
+					amount: { blunt: 5 }
 				}
 			})
 		})
@@ -585,7 +597,7 @@ describe('Fighter', () => {
 			expect(fighter.useSkill(399)).toEqual({
 				time: 'instant',
 				type: 'damage',
-				ammount: { blunt: 10 }
+				amount: { blunt: 10 }
 			})
 			expect(fighter.currentStamina).toBe(17)			
 		})
@@ -685,5 +697,9 @@ describe('Fighter', () => {
 			fighter.adquirePerk(fireAffinity)
 			expect(fighter.getAllSkills()).toContainEqual(fireAffinity.skill[0])
 		})
+	})
+
+	describe('random test', () => {
+		
 	})
 })

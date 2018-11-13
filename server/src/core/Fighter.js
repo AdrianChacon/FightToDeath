@@ -2,7 +2,7 @@ const { scaleDown, reduceSum, add } = require('./vector.utils')
 
 const validStats = ['str', 'res', 'int', 'dex', 'spr', 'spd', 'con', 'lck']
 const validEquipmentSpots = ['head','shoulder','gloves','legs','foot','ringLeft1','ringLeft2','ringLeft3','ringRight1','ringRight2','ringRight3','amulet','leftHand','rightHand','cloak']
-const validEffectTypes = ['resistance']
+const validEffectTypes = ['resistance', 'stat']
 
 class Fighter {
 	constructor(config) {
@@ -38,6 +38,7 @@ class Fighter {
 			cloak: null
 		}
 		
+		this.perks = config.perks || []
 		this.statPoints = config.statPoints || 0
 		this.level = config.level || 1
 		this.experience = config.experience || 0
@@ -49,7 +50,6 @@ class Fighter {
 		this.currentLife = config.currentLife || this.maxLife
 		this.currentStamina = config.currentStamina || this.maxStamina
 		this.cooldowns = {}
-		this.perks = config.perks || []
 		this._turnsToPlay = 0
 	}
 
@@ -82,10 +82,10 @@ class Fighter {
 	// Converts stat-based effects into absolute effects
 	parseEffects(effect){
 		if(Array.isArray(effect)) return effect.map(this.parseEffects)
-		if(effect.type === 'damage' && Array.isArray(effect.ammount)){
-			return { ...effect, ammount: effect.ammount.reduce((acc, {type, scalar, ammount, base}) => {
+		if(effect.type === 'damage' && Array.isArray(effect.amount)){
+			return { ...effect, amount: effect.amount.reduce((acc, {type, scalar, amount, base}) => {
 				if(!acc[type]) acc[type] = 0
-				acc[type] += (scalar ? (this.baseStats[scalar] * ammount) : 0) + (base || 0)
+				acc[type] += (scalar ? (this.baseStats[scalar] * amount) : 0) + (base || 0)
 				return acc
 			}, {})}
 		}
@@ -95,8 +95,8 @@ class Fighter {
 		return this._getExperienceToLevel(this.level + 1)
 	}
 
-	giveExperience(ammount) {
-		this.experience += ammount
+	giveExperience(amount) {
+		this.experience += amount
 		while (this.getExperienceToNextLevel() <= this.experience) {
 			this._levelUp()
 		}
@@ -117,17 +117,17 @@ class Fighter {
 		if(effect.time === 'instant'){
 			switch(effect.type){
 			case 'heal':
-				this.heal(effect.ammount)
+				this.heal(effect.amount)
 				break
 			case 'damage':
-				this.applyDamage(effect.ammount)
+				this.applyDamage(effect.amount)
 				break
 			case 'stamina':
-				this.applyStamina(effect.ammount)
+				this.applyStamina(effect.amount)
 				break
 			}
 		} else {
-			this.effectStack.push(effect)
+			this.effectStack.push({...effect})
 		}
 	}
 
@@ -144,8 +144,8 @@ class Fighter {
 		}
 	}
 
-	heal(ammount){
-		this.currentLife += ammount
+	heal(amount){
+		this.currentLife += amount
 		if(this.currentLife > this.maxLife) this.currentLife = this.maxLife
 	}
 
@@ -153,12 +153,12 @@ class Fighter {
 		this.applyEffect({
 			time: 'instant',
 			type: 'stamina',
-			ammount: this.getStaminaRechargeRate()
+			amount: this.getStaminaRechargeRate()
 		})
 	}
 
-	applyStamina(ammount){
-		this.currentStamina += ammount
+	applyStamina(amount){
+		this.currentStamina += amount
 		if(this.currentStamina > this.maxStamina) this.currentStamina = this.maxStamina
 	}
 
@@ -171,7 +171,8 @@ class Fighter {
 	}
 
 	getStats(){
-		return this.baseStats
+		const statEffects = this.getEffects('stat').map(effect => effect.amount)
+		return statEffects.reduce(add, this.baseStats)
 	}
 
 	getTurnsToPlay(){
@@ -179,35 +180,35 @@ class Fighter {
 	}
 
 	getMaxLife() {
-		const { str, res, con } = this.baseStats
+		const { str, res, con } = this.getStats()
 		return Math.floor((con * 20 + res * 10 + str * 5) * (1 + (this.level - 1) / 100))
 	}
 
 	getMaxStamina() {
-		const { dex, res, con, spr, int } = this.baseStats
+		const { dex, res, con, spr, int } = this.getStats()
 		const resOrSpr = Math.max(res, spr)
 		const conOrInt = Math.max(con, int)
 		return Math.floor((resOrSpr * 3 + conOrInt * 1.5 + dex) * (1 + (this.level - 1) / 500))
 	}
 
 	getStaminaRechargeRate(){
-		const { spr, res } = this.baseStats
+		const { spr, res } = this.getStats()
 		const resOrSpr = Math.max(spr, res)
 		return Math.floor(resOrSpr/5)
 	}
 
 	getToHitRatio() {
-		const { dex, lck, int } = this.baseStats
+		const { dex, lck, int } = this.getStats()
 		return (dex * 5.5 + lck * 1.5 + int * 2) / 100
 	}
 
 	getToDodgeRatio() {
-		const { dex, con, lck, spd } = this.baseStats
+		const { dex, con, lck, spd } = this.getStats()
 		return (dex * 2.0 + con * 1.0 + lck * 1.5 + spd * 1.5) / 100
 	}
 
 	getDamage() {
-		const { str } = this.baseStats
+		const { str } = this.getStats()
 		const { rightHand, leftHand } = this.equipment
 		if(rightHand || leftHand){			
 			const damages = [
@@ -215,9 +216,9 @@ class Fighter {
 				...leftHand ? leftHand.damage : []
 			]
 			
-			return damages.reduce((acc, {type, scalar, ammount, base}) => {
+			return damages.reduce((acc, {type, scalar, amount, base}) => {
 				if(!acc[type]) acc[type] = 0
-				if(scalar) acc[type] += this.baseStats[scalar] * ammount
+				if(scalar) acc[type] += this.getStats()[scalar] * amount
 				if(base) acc[type] += base
 				return acc
 			},{})
@@ -236,8 +237,9 @@ class Fighter {
 			.reduce((acc, effect) => Array.isArray(effect) ?
 				[...acc, ...effect] : 
 				[ ...acc, effect] , [])
+		const stackEffects = this.effectStack
 
-		return [ ...objectEffects, ...perksEffects]
+		return [ ...objectEffects, ...perksEffects, ...stackEffects]
 	}
 
 	getEffects(type){
@@ -257,7 +259,7 @@ class Fighter {
 			effect: {
 				time: 'instant',
 				type: 'damage',
-				ammount: this.getDamage()
+				amount: this.getDamage()
 			}
 		}]
 
@@ -288,9 +290,9 @@ class Fighter {
 	}
 
 	getResistances(){
-		const { res, con, spr, int} = this.baseStats
+		const { res, con, spr, int} = this.getStats()
 
-		const resistanceEffects = this.getEffects('resistance').map(effect => effect.ammount)
+		const resistanceEffects = this.getEffects('resistance').map(effect => effect.amount)
 
 		const baseResistances = {
 			blunt: res * 0.005 + con * 0.005,
@@ -309,13 +311,13 @@ class Fighter {
 	equip(item, slot){
 		if(item.require){
 			for(const i in item.require){
-				const { type, target, ammount } = item.require[i]
+				const { type, target, amount } = item.require[i]
 				switch(type){
 				case 'stat':
-					if(this.baseStats[target] < ammount) throw new Error('Fighter did not meet the stat requirement')
+					if(this.getStats()[target] < amount) throw new Error('Fighter did not meet the stat requirement')
 					break
 				case 'level':
-					if(this.level < ammount) throw new Error('Fighter did not meet the level requirement')
+					if(this.level < amount) throw new Error('Fighter did not meet the level requirement')
 				}
 			}
 		}

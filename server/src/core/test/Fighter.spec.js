@@ -1,6 +1,6 @@
-const Fighter = require('./Fighter')
-const items = require('./items.json')
-const perks = require('./perks.json')
+const Fighter = require('../Fighter')
+const items = require('../seeds/items.json')
+const perks = require('../seeds/perks.json')
 
 const itemBag = items.reduce((bag, item) => {
 	let name = item.name.replace(/ /g, '')

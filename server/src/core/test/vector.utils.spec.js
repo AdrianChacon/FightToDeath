@@ -1,4 +1,4 @@
-const { scaleUp, scaleDown, factor, inverse, reduceSum, add } = require('./vector.utils')
+const { scaleUp, scaleDown, factor, inverse, reduceSum, add } = require('../utils/vector.utils')
 
 
 describe('vector utils', () => {

@@ -1,4 +1,4 @@
-const { scaleDown, reduceSum, add } = require('./vector.utils')
+const { scaleDown, reduceSum, add } = require('./utils/vector.utils')
 
 const validStats = ['str', 'res', 'int', 'dex', 'spr', 'spd', 'con', 'lck']
 const validEquipmentSpots = ['head','shoulder','gloves','legs','foot','ringLeft1','ringLeft2','ringLeft3','ringRight1','ringRight2','ringRight3','amulet','leftHand','rightHand','cloak']

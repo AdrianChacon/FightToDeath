@@ -25,6 +25,9 @@ const baseConfig = {
 	]
 }
 
+const item1 = { id: 1}
+const item2 = { id: 2}
+
 describe('Crew', () => {
 	let crew
 
@@ -47,7 +50,30 @@ describe('Crew', () => {
 		})
     
 		it('have fighters', () => {
-			expect(Crew.fighters).toBeDefined()
+			expect(crew.fighters).toBeDefined()
+		})
+    
+		it('have inventory', () => {
+			expect(crew.inventory).toBeDefined()
+		})
+	})
+  
+	describe('inventory', () => {
+		it('can get items', () => {
+			expect(crew.giveItem).toBeDefined()
+			crew.giveItem(item1)
+			expect(crew.inventory[item1.id]).toBe(1)
+		})
+    
+		it('can use items', () => {
+			expect(crew.useItem).toBeDefined()
+			crew.giveItem(item1)
+			crew.useItem(1)
+			expect(crew.inventory[item1.id]).toBe(0)
+		})
+    
+		it('cant use items it dont have', () => {
+			expect(() => crew.useItem(1)).toThrow()
 		})
 	})
 })

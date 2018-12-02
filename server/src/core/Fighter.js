@@ -49,7 +49,7 @@ class Fighter {
 		this.currentLife = config.currentLife || this.getMaxLife()
 		this.currentStamina = config.currentStamina || this.maxStamina
 		this.cooldowns = {}
-		this._turnsToPlay = 0
+		this._turnsToPlay = 20 - this.baseStats.spd
 	}
 
 	nextTurn(){

@@ -433,21 +433,24 @@ describe('Fighter', () => {
 			expect(fighter.getTurnsToPlay).toBeDefined()
 		})
 
-		it('starts at 0', () => {
-			expect(fighter.getTurnsToPlay()).toBe(0)
+		it('starts at spd', () => {
+			expect(fighter.getTurnsToPlay()).toBe(20 - fighter.baseStats.spd)
 		})
 
 		it('increases 20 - fighter speed stat after each action', () => {
+			fighter._turnsToPlay = 0
 			fighter.useSkill(0)
 			expect(fighter.getTurnsToPlay()).toBe(15)
 		})
 
 		it('cant play if turn to play is not 0', () => {
+			fighter._turnsToPlay = 0
 			fighter.useSkill(0)
 			expect(() => fighter.useSkill(0)).toThrow()
 		})
 
 		it('next turn decreases the turn to play', () => {
+			fighter._turnsToPlay = 0			
 			fighter.useSkill(0)
 			fighter.nextTurn()
 			expect(fighter.getTurnsToPlay()).toBe(14)
@@ -541,6 +544,10 @@ describe('Fighter', () => {
 	})
 
 	describe('skills', () => {
+		beforeEach(() => {
+			fighter._turnsToPlay = 0
+		})
+
 		it('have skills', () => {
 			expect(fighter.getAllSkills).toBeDefined()
 			expect(Array.isArray(fighter.getAllSkills())).not.toBeFalsy()

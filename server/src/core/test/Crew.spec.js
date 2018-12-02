@@ -16,26 +16,25 @@ const baseFighterConfig = {
 	}
 }
 
-const baseConfig = {
-	id: 9999,
-	fighters: [
-		new Fighter({ ...baseFighterConfig, id: 1, name: 'Adri'}),
-		new Fighter({ ...baseFighterConfig, id: 2, name: 'Fran'}),
-		new Fighter({ ...baseFighterConfig, id: 3, name: 'John'}),
-	]
-}
-
 const item1 = { id: 1, effect: [{
 	time: 'instant',
 	type: 'heal',
 	amount: 100
 }] }
-const item2 = { id: 2}
 
 describe('Crew', () => {
 	let crew
+	let baseConfig
 
 	beforeEach(() => {
+		baseConfig = {
+			id: 9999,
+			fighters: [
+				new Fighter({ ...baseFighterConfig, id: 1, name: 'Adri'}),
+				new Fighter({ ...baseFighterConfig, id: 2, name: 'Fran'}),
+				new Fighter({ ...baseFighterConfig, id: 3, name: 'John'}),
+			]
+		}
 		crew = new Crew(baseConfig)
 	})
   
@@ -63,6 +62,10 @@ describe('Crew', () => {
 	})
 
 	describe('fighters', () => {
+		beforeEach(() => {
+			crew = new Crew(baseConfig)
+		})
+
 		it('have a list of fighters', () => {
 			expect(crew.getFighters).toBeDefined()
 			expect(Array.isArray(crew.getFighters())).toBe(true)
@@ -90,6 +93,15 @@ describe('Crew', () => {
 			const ttl = crew.getFighter(1).getTurnsToPlay()
 			crew.nextTurn()
 			expect(crew.getFighter(1).getTurnsToPlay()).toBe(ttl - 1)
+		})
+
+		it('can retrieve a list with fighters and turns to play', () => {
+			expect(crew.getPlayQueue).toBeDefined()
+			const queue = crew.getPlayQueue()
+			expect(queue).toBeInstanceOf(Object)
+			expect(queue[1]).toBe(15)
+			expect(queue[2]).toBe(15)
+			expect(queue[3]).toBe(15)
 		})
 	})
   

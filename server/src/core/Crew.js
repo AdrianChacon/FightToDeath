@@ -5,7 +5,7 @@ class Crew {
 		if (!config.fighters || config.fighters.length === 0) throw new Error('At least one fighter is required')
 
 		this.id = config.id
-		this.fighters = config.fighters
+		this.fighters = [ ...config.fighters ]
 		this.inventory = config.inventory || {}
 	}
 	
@@ -26,6 +26,13 @@ class Crew {
 
 	nextTurn(){
 		this.fighters.forEach(fighter => fighter.nextTurn())
+	}
+
+	getPlayQueue(){
+		return this.fighters.reduce((acc, fighter) => {
+			acc[fighter.id] = fighter.getTurnsToPlay()
+			return acc
+		}, {})
 	}
 
 	giveItem(item){

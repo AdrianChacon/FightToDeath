@@ -8,7 +8,26 @@ class Crew {
 		this.fighters = config.fighters
 		this.inventory = config.inventory || {}
 	}
-  
+	
+	getFighters(){
+		return this.fighters
+	}
+
+	getFighter(id){
+		const fighter = this.fighters.find(fighter => fighter.id === id)
+		if(!fighter) throw new Error(`The fighter with id ${id} is not in this crew`)
+		return fighter
+	}
+
+	applyEffect(fighterId, effect){
+		const fighter = this.getFighter(fighterId)
+		fighter.applyEffect(effect)
+	}
+
+	nextTurn(){
+		this.fighters.forEach(fighter => fighter.nextTurn())
+	}
+
 	giveItem(item){
 		if(!this.inventory[item.id]) this.inventory[item.id] = 0
 		this.inventory[item.id]++
